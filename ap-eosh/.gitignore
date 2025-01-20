@@ -1,0 +1,16 @@
+/result/
+/target/
+/build/*
+/bin/*
+/.gradle/*
+/.settings/*
+/.classpath
+/.project
+/.idea/*
+/.vscode/*
+.factorypath
+.prettierignore
+.prettierrc
+*.iml
+
+/src/main/java/com/airpremia/eosh/authoritymanagement/Test.java

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.education.repository.InstructorEvaluationRepository">
+    <select id="selectInstructorEvaluation" resultType="InstructorEvaluationDto">
+           SELECT instructor_evaluation_seq
+           ,education_attend_user_seq
+           ,education_instructor_seq
+           ,education_seq
+           ,one_depth_item_code
+           ,two_depth_question_code
+           ,score
+           ,remark
+           ,delete_ip
+        FROM instructor_evaluation
+        <where>
+            AND education_seq = #{educationSeq}
+            AND education_attend_user_seq = #{educationAttendUserSeq}
+        </where>
+    </select>
+
+    <insert id="insertInstructorEvaluation" useGeneratedKeys="true" keyProperty="instructorEvaluationSeq">
+        INSERT INTO instructor_evaluation (
+            education_attend_user_seq
+            ,education_seq
+            ,education_instructor_seq
+            ,one_depth_item_code
+            ,two_depth_question_code
+            ,score
+            ,remark
+            ,insert_ip
+            ,insert_user_id
+            ,insert_dtm
+        ) VALUES
+            <foreach collection="insertDtoList" item="item" separator=", ">
+            (
+                #{item.educationAttendUserSeq}
+                ,#{item.educationSeq}
+                ,#{item.educationInstructorSeq}
+                ,#{item.oneDepthItemCode}
+                ,#{item.twoDepthQuestionCode}
+                ,#{item.score}
+                ,#{item.remark}
+                ,#{item.insertIp}
+                ,#{item.insertUserId}
+                ,#{item.insertDtm}
+            )
+            </foreach>
+    </insert>
+
+    <update id="updateInstructorEvaluation">
+        UPDATE instructor_evaluation SET
+         one_depth_item_code = #{oneDepthItemCode}
+        ,two_depth_question_code = #{twoDepthQuestionCode}
+        ,score = #{score}
+        ,remark = #{remark}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        <where>
+            instructor_evaluation_seq = #{instructorEvaluationSeq}
+        </where>
+    </update>
+
+    <delete id="deleteInstructorEvaluation">
+        DELETE
+        FROM instructor_evaluation
+        <where>
+            AND education_seq = #{educationSeq}
+            AND education_attend_user_seq = #{educationAttendUserSeq}
+        </where>
+    </delete>
+
+    <select id="selectInstructorEvaluationCount" resultType="CourseEvalCountDto">
+        SELECT education_seq
+            , count(education_seq) AS course_eval_count
+        FROM instructor_evaluation
+        <where>
+            AND education_seq IN
+            <foreach item="educationSeq" collection="educationSeqs" open="(" separator="," close=")">
+                #{educationSeq}
+            </foreach>
+        </where>
+        GROUP BY education_seq
+    </select>
+
+    <delete id="deleteAllInstructorEvaluation">
+        DELETE
+        FROM instructor_evaluation
+        <where>
+            education_seq = #{educationSeq}
+        </where>
+    </delete>
+</mapper>

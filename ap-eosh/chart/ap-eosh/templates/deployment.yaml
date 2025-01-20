@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ap-eosh.fullname" . }}
+  labels:
+    {{- include "ap-eosh.labels" . | nindent 4 }}
+    app: {{ .Chart.Name }}-app-{{ .Values.phase }}
+    tags.datadoghq.com/env: {{ .Values.phase }}
+    tags.datadoghq.com/service: {{ .Chart.Name }}
+    tags.datadoghq.com/version: "{{ .Values.image.tag }}"
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ap-eosh.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+        admission.datadoghq.com/java-lib.version: v1.33.0
+      {{- end }}
+      labels:
+        {{- include "ap-eosh.selectorLabels" . | nindent 8 }}
+        timestamp: "{{ now | unixEpoch }}"
+        app: {{ .Chart.Name }}-app-{{ .Values.phase }}
+        tags.datadoghq.com/env: {{ .Values.phase }}
+        tags.datadoghq.com/service: {{ .Chart.Name }}
+        tags.datadoghq.com/version: "{{ .Values.image.tag }}"
+        admission.datadoghq.com/enabled: "true"
+    spec:
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: mount-efs
+          persistentVolumeClaim:
+            claimName: {{ include "ap-eosh.fullname" . }}-uploads
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ap-eosh.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          envFrom:
+              - configMapRef:
+                    name: {{ include "ap-eosh.fullname" . }}-configmap
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 180
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            failureThreshold: 12
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - mountPath: /app/uploads
+              name: mount-efs
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

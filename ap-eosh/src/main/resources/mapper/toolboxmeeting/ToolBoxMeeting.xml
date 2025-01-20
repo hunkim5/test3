@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.toolboxmeeting.repository.ToolBoxMeetingRepository">
+
+    <select id="selectToolBoxMeetingPage" resultType="ToolBoxMeetingDto">
+        SELECT tool_box_meeting_seq
+        ,job_seq
+        ,job_dt
+        ,tool_box_meeting_subject
+        ,tool_box_meeting_content
+        ,potential_risk_factor_code
+        ,education_content
+        ,education_process_comment
+        ,multiple_attachfile_uuid
+        ,job_permission_bool
+        ,job_plan_bool
+        ,job_checklist
+        ,worker_health_status_comment
+        ,worker_protect_gear_check_comment
+        ,insert_user_id
+        FROM tool_box_meeting
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.jobDtStart)">
+                AND job_dt >= #{searchDto.jobDtStart}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.jobDtEnd)">
+                AND job_dt &lt;= #{searchDto.jobDtEnd}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.toolBoxMeetingSubject)">
+                AND tool_box_meeting_subject like #{searchDto.toolBoxMeetingSubject}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectToolBoxMeetingPageUser" resultType="ToolBoxMeetingDto">
+        SELECT tbm.tool_box_meeting_seq
+        ,tbm.job_seq
+        ,tbm.job_dt
+        ,tbm.tool_box_meeting_subject
+        ,tbm.tool_box_meeting_content
+        ,tbm.potential_risk_factor_code
+        ,tbm.education_content
+        ,tbm.education_process_comment
+        ,tbm.multiple_attachfile_uuid
+        ,tbm.job_permission_bool
+        ,tbm.job_plan_bool
+        ,tbm.job_checklist
+        ,tbm.worker_health_status_comment
+        ,tbm.worker_protect_gear_check_comment
+        ,tbm.insert_user_id
+        FROM tool_box_meeting tbm
+        INNER JOIN job_employee je ON tbm.tool_box_meeting_seq = je.tool_box_meeting_seq
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.jobDtStart)">
+                AND job_dt >= #{searchDto.jobDtStart}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.jobDtEnd)">
+                AND job_dt &lt;= #{searchDto.jobDtEnd}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.toolBoxMeetingSubject)">
+                AND tool_box_meeting_subject like #{searchDto.toolBoxMeetingSubject}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(employeeNumber)">
+                AND je.employee_number = #{employeeNumber}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectToolBoxMeeting" resultType="ToolBoxMeetingDto">
+           SELECT tool_box_meeting_seq
+           ,job_seq
+           ,job_dt
+           ,tool_box_meeting_subject
+           ,tool_box_meeting_content
+           ,potential_risk_factor_code
+           ,education_content
+           ,education_process_comment
+           ,multiple_attachfile_uuid
+           ,job_permission_bool
+           ,job_plan_bool
+           ,job_checklist
+           ,worker_health_status_comment
+           ,worker_protect_gear_check_comment
+        FROM tool_box_meeting
+        WHERE
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+    </select>
+
+    <insert id="insertToolBoxMeeting" useGeneratedKeys="true" keyProperty="toolBoxMeetingSeq">
+        INSERT INTO tool_box_meeting
+        (job_seq
+        ,job_dt
+        ,tool_box_meeting_subject
+        ,tool_box_meeting_content
+        ,potential_risk_factor_code
+        ,education_content
+        ,education_process_comment
+        ,multiple_attachfile_uuid
+        ,job_permission_bool
+        ,job_plan_bool
+        ,job_checklist
+        ,worker_health_status_comment
+        ,worker_protect_gear_check_comment
+        ,insert_ip
+        ,insert_user_id)
+ VALUES
+        (#{jobSeq}
+        ,#{jobDt}
+        ,#{toolBoxMeetingSubject}
+        ,#{toolBoxMeetingContent}
+        ,#{potentialRiskFactorCode}
+        ,#{educationContent}
+        ,#{educationProcessComment}
+        ,#{multipleAttachfileUuid}
+        ,#{jobPermissionBool}
+        ,#{jobPlanBool}
+        ,#{jobChecklist}
+        ,#{workerHealthStatusComment}
+        ,#{workerProtectGearCheckComment}
+        ,#{insertIp}
+        ,#{insertUserId})
+    </insert>
+
+    <update id="updateToolBoxMeeting">
+        UPDATE tool_box_meeting SET
+         job_dt = #{jobDt}
+        ,tool_box_meeting_subject = #{toolBoxMeetingSubject}
+        ,tool_box_meeting_content = #{toolBoxMeetingContent}
+        ,potential_risk_factor_code = #{potentialRiskFactorCode}
+        ,education_content = #{educationContent}
+        ,education_process_comment = #{educationProcessComment}
+        ,multiple_attachfile_uuid = #{multipleAttachfileUuid}
+        ,job_permission_bool = #{jobPermissionBool}
+        ,job_plan_bool = #{jobPlanBool}
+        ,job_checklist = #{jobChecklist}
+        ,worker_health_status_comment = #{workerHealthStatusComment}
+        ,worker_protect_gear_check_comment = #{workerProtectGearCheckComment}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+        </where>
+    </update>
+
+    <delete id="deleteToolBoxMeeting">
+        DELETE
+        FROM tool_box_meeting
+        <where>
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+        </where>
+    </delete>
+
+    <delete id="deleteJobEmployeeByToolBoxSeq">
+        DELETE
+        FROM job_employee
+        <where>
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+        </where>
+    </delete>
+
+    <delete id="deleteManageSupervisionEmployeeToolBoxSeq">
+        DELETE
+        FROM manage_supervision_employee
+        <where>
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+        </where>
+    </delete>
+
+</mapper>

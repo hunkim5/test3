@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.ca.repository.SubscribeCaItemRepository">
+
+    <select id="selectCaCntByRange" resultType="Long">
+        SELECT COUNT(*)
+        FROM
+            subscribe_ca_item
+        WHERE insert_dtm BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="selectList" resultType="SubscribeCaItemEntity">
+        SELECT
+        t_mast.subscribe_ca_item_seq
+        ,t_mast.subscribe_ca_uuid
+        ,t_mast.ca_id
+        ,t_mast.ca_appvalprc_enum
+        ,t_mast.incharge_user_id
+        ,t_mast.incharge_user_name
+        ,t_mast.incharge_department_id
+        ,t_mast.incharge_department_name
+        ,t_mast.ca_subject
+        ,t_mast.ca_content
+        ,t_mast.ca_deadline_dt
+        ,t_mast.cap_content
+        ,t_mast.cap_root_cause_content
+        ,t_mast.cap_multiple_file_uuid
+        ,t_mast.cap_expect_complete_dt
+        ,t_mast.cai_content
+        ,t_mast.cai_complete_dt
+        ,t_mast.cai_multiple_file_uuid
+        ,t_mast.feedback_content
+        ,t_mast.delete_bool
+        ,t_mast.delete_user_id
+        ,t_mast.delete_dtm
+        ,t_mast.delete_ip
+        ,t_mast.insert_user_id
+        ,t_mast.insert_dtm
+        ,t_mast.insert_ip
+        ,t_mast.update_user_id
+        ,t_mast.update_dtm
+        ,t_mast.update_ip
+        FROM
+        subscribe_ca_item t_mast
+        <where>
+            and t_mast.subscribe_ca_uuid = #{subscribeCaUuid}
+            and t_mast.delete_bool = 0
+        </where>
+        order by
+        t_mast.subscribe_ca_item_seq desc
+    </select>
+
+    <select id="selectSubscribeCaItemDetail" resultType="subscribeCaItemEntity">
+        SELECT
+            t_mast.subscribe_ca_item_seq
+            ,t_mast.subscribe_ca_uuid
+            ,t_mast.ca_id
+            ,t_mast.ca_appvalprc_enum
+            ,t_mast.incharge_user_id
+            ,t_mast.incharge_user_name
+            ,t_mast.incharge_department_id
+            ,t_mast.incharge_department_name
+            ,t_mast.ca_subject
+            ,t_mast.ca_content
+            ,t_mast.ca_deadline_dt
+            ,t_mast.cap_content
+            ,t_mast.cap_root_cause_content
+            ,t_mast.cap_multiple_file_uuid
+            ,t_mast.cap_expect_complete_dt
+            ,t_mast.cai_content
+            ,t_mast.cai_complete_dt
+            ,t_mast.cai_multiple_file_uuid
+            ,t_mast.feedback_content
+            ,t_mast.delete_bool
+            ,t_mast.delete_user_id
+            ,t_mast.delete_dtm
+            ,t_mast.delete_ip
+            ,t_mast.insert_user_id
+            ,t_mast.insert_dtm
+            ,t_mast.insert_ip
+            ,t_mast.update_user_id
+            ,t_mast.update_dtm
+            ,t_mast.update_ip
+        FROM
+            subscribe_ca_item t_mast
+        <where>
+            AND subscribe_ca_item_seq = #{subscribeCaItemSeq}
+        </where>
+    </select>
+
+    <update id="deleteSubscribeCaItem">
+        UPDATE subscribe_ca_item
+        SET
+        delete_bool = 1
+        ,delete_user_id = #{deleteUserId}
+        ,delete_dtm = #{deleteDtm}
+        ,delete_ip = #{deleteIp}
+        <where>
+            and subscribe_ca_uuid = #{subscribeCaUuid}
+            and subscribe_ca_item_seq = #{subscribeCaItemSeq}
+        </where>
+    </update>
+    <insert id="insertSubscribeCaItem" useGeneratedKeys="true" keyProperty="subscribeCaItemSeq">
+        INSERT INTO subscribe_ca_item (
+            subscribe_ca_uuid
+            ,ca_id
+            ,ca_appvalprc_enum
+            ,incharge_user_id
+            ,incharge_user_name
+            ,incharge_department_id
+            ,incharge_department_name
+            ,ca_subject
+            ,ca_content
+            ,ca_deadline_dt
+            ,cap_content
+            ,cap_root_cause_content
+            ,cap_multiple_file_uuid
+            ,cap_expect_complete_dt
+            ,cai_content
+            ,cai_complete_dt
+            ,cai_multiple_file_uuid
+            ,feedback_content
+            ,insert_user_id
+            ,insert_dtm
+            ,insert_ip
+            ,update_user_id
+            ,update_dtm
+            ,update_ip
+            )
+        VALUES (
+            #{subscribeCaUuid}
+            ,#{caId}
+            ,#{caAppvalprcEnum}
+            ,#{inchargeUserId}
+            ,#{inchargeUserName}
+            ,#{inchargeDepartmentId}
+            ,#{inchargeDepartmentName}
+            ,#{caSubject}
+            ,#{caContent}
+            ,#{caDeadlineDt}
+            ,#{capContent}
+            ,#{capRootCauseContent}
+            ,#{capMultipleFileUuid}
+            ,#{capExpectCompleteDt}
+            ,#{caiContent}
+            ,#{caiCompleteDt}
+            ,#{caiMultipleFileUuid}
+            ,#{feedbackContent}
+            ,#{insertUserId}
+            ,#{insertDtm}
+            ,#{insertIp}
+            ,#{updateUserId}
+            ,#{updateDtm}
+            ,#{updateIp}
+            )
+
+    </insert>
+    <update id="updateSubscribeCaItem">
+        UPDATE subscribe_ca_item
+        SET
+        ca_appvalprc_enum = #{caAppvalprcEnum}
+        ,incharge_user_id = #{inchargeUserId}
+        ,incharge_user_name = #{inchargeUserName}
+        ,incharge_department_id = #{inchargeDepartmentId}
+        ,incharge_department_name = #{inchargeDepartmentName}
+        ,ca_subject = #{caSubject}
+        ,ca_content = #{caContent}
+        ,ca_deadline_dt = #{caDeadlineDt}
+        ,cap_content = #{capContent}
+        ,cap_root_cause_content = #{capRootCauseContent}
+        ,cap_multiple_file_uuid = #{capMultipleFileUuid}
+        ,cap_expect_complete_dt = #{capExpectCompleteDt}
+        ,cai_content = #{caiContent}
+        ,cai_complete_dt = #{caiCompleteDt}
+        ,cai_multiple_file_uuid = #{caiMultipleFileUuid}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        ,update_ip = #{updateIp}
+        <where>
+            and subscribe_ca_uuid = #{subscribeCaUuid}
+            and subscribe_ca_item_seq = #{subscribeCaItemSeq}
+        </where>
+    </update>
+    <update id="updateSubscribeCaItemCaApprvalprcEnum">
+        UPDATE subscribe_ca_item
+        SET
+             ca_appvalprc_enum = #{caAppvalprcEnum}
+            ,update_user_id = #{updateUserId}
+            ,update_dtm = #{updateDtm}
+            ,update_ip = #{updateIp}
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(feedbackContent)">
+                , feedback_content = #{feedbackContent}
+            </if>
+        <where>
+            and subscribe_ca_uuid = #{subscribeCaUuid}
+            and subscribe_ca_item_seq = #{subscribeCaItemSeq}
+        </where>
+    </update>
+
+    <select id="selectCaCountByRange" resultType="int">
+        SELECT COUNT(1)
+        FROM subscribe_ca_item
+        <where>
+            AND insert_dtm BETWEEN #{start} AND #{end}
+        </where>
+    </select>
+
+    <update id="deleteSubscribeCaItemByUuid">
+        UPDATE subscribe_ca_item
+        SET delete_bool = true
+            , delete_user_id = #{updateUserId}
+            , delete_dtm = #{updateDtm}
+            , delete_ip = #{updateIp}
+        <where>
+            AND subscribe_ca_uuid = #{subscribeCaUuid}
+        </where>
+    </update>
+</mapper>

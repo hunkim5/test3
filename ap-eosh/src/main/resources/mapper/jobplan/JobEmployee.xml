@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.jobplan.repository.JobEmployeeRepository">
+    <select id="selectJobEmployeeList" resultType="JobEmployeeDto">
+           SELECT job_employee_seq
+           ,job_seq
+           ,employee_number
+           ,employee_name
+           ,department_number
+           ,department_name
+           ,tbm_bool
+           ,signature_check
+           ,entry_dtm
+           ,leave_dtm
+           ,tool_box_meeting_seq
+        FROM job_employee
+        <where>
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+        </where>
+    </select>
+
+    <select id="selectJobEmployeeListByUser" resultType="JobEmployeeDto">
+        SELECT job_employee_seq
+        ,job_seq
+        ,employee_number
+        ,employee_name
+        ,department_number
+        ,department_name
+        ,tbm_bool
+        ,signature_check
+        ,entry_dtm
+        ,leave_dtm
+        ,tool_box_meeting_seq
+        FROM job_employee
+        <where>
+            AND employee_number = #{jobEmployeeNumber}
+            AND tool_box_meeting_seq = #{toolBoxMeetingSeq}
+        </where>
+
+    </select>
+    <select id="selectJobEmployeeJobList" resultType="JobEmployeeDto">
+           SELECT job_employee_seq
+           ,job_seq
+           ,employee_number
+           ,employee_name
+           ,department_number
+           ,department_name
+           ,tbm_bool
+           ,signature_check
+           ,entry_dtm
+           ,leave_dtm
+           ,tool_box_meeting_seq
+        FROM job_employee
+        <where>
+            job_seq = #{jobSeq}
+        </where>
+    </select>
+    <select id="jobEmployeeProtectGearList" resultType="JobEmployeeProtectGearCheckDto">
+        SELECT
+            jepgc.protect_gear_check_seq
+            ,je.employee_name
+            ,ups.protect_gear_code
+            ,jepgc.check_bool
+            ,ups.quantity
+        FROM job_employee je
+        LEFT OUTER JOIN job_employee_protect_gear_check jepgc ON je.job_employee_seq = jepgc.job_employee_seq
+        LEFT OUTER JOIN user_protectgear_status ups ON je.employee_number = ups.user_id
+        <where>
+            je.job_seq = #{jobSeq}
+        </where>
+    </select>
+    <select id="getJobEmployeeSeq" resultType="Long">
+        SELECT job_employee_seq
+        FROM job_employee
+        <where>
+            employee_number = #{userSeq}
+            AND job_seq = #{jobSeq}
+        </where>
+    </select>
+
+    <insert id="insertJobEmployee">
+        INSERT INTO job_employee (
+            tool_box_meeting_seq
+            ,job_seq
+            ,employee_number
+            ,employee_name
+            ,department_number
+            ,department_name
+            ,tbm_bool
+            ,signature_check
+            ,entry_dtm
+            ,leave_dtm
+            ,insert_user_id
+            ,insert_ip
+            )
+        VALUES (
+            #{toolBoxMeetingSeq}
+            ,#{jobSeq}
+            ,#{employeeNumber}
+            ,#{employeeName}
+            ,#{departmentNumber}
+            ,#{departmentName}
+            ,#{tbmBool}
+            ,#{signatureCheck}
+            ,#{entryDtm}
+            ,#{leaveDtm}
+            ,#{insertUserId}
+            ,#{insertIp}
+            )
+    </insert>
+    <insert id="insertJobEmployeeList">
+        INSERT INTO job_employee (
+            tool_box_meeting_seq
+            ,job_seq
+            ,employee_number
+            ,employee_name
+            ,department_number
+            ,department_name
+            ,tbm_bool
+            ,signature_check
+            ,entry_dtm
+            ,leave_dtm
+            ,insert_user_id
+            ,insert_ip
+            )
+        VALUES
+        <foreach collection="employeeList" item="item" separator=",">
+           (
+               #{item.toolBoxMeetingSeq}
+               ,#{item.jobSeq}
+               ,#{item.employeeNumber}
+               ,#{item.employeeName}
+               ,#{item.departmentNumber}
+               ,#{item.departmentName}
+               ,#{item.tbmBool}
+               ,#{item.signatureCheck}
+               ,#{item.entryDtm}
+               ,#{item.leaveDtm}
+               ,#{item.insertUserId}
+               ,#{item.insertIp}
+           )
+       </foreach>
+    </insert>
+
+    <update id="updateJobEmployee">
+        UPDATE job_employee
+        SET
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+            ,tbm_bool = #{tbmBool}
+            ,signature_check = #{signatureCheck}
+            ,entry_dtm = #{entryDtm}
+            ,leave_dtm = #{leaveDtm}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            job_employee_seq = #{jobEmployeeSeq}
+        </where>
+    </update>
+    <update id="updateJobEmployeeSignature">
+        UPDATE job_employee
+        SET
+            signature_check = #{signatureCheck}
+            ,leave_dtm = #{leaveDtm}
+        <where>
+            job_employee_seq = #{jobEmployeeSeq}
+        </where>
+    </update>
+    <update id="updateJobEmployeeSignatureTbm">
+        UPDATE job_employee
+        SET
+            tbm_bool = #{tbmBool}
+        <where>
+            job_employee_seq = #{jobEmployeeSeq}
+        </where>
+    </update>
+
+    <delete id="deleteJobEmployee">
+        DELETE
+        FROM job_employee
+        <where>
+            job_employee_seq = #{jobEmployeeSeq}
+        </where>
+    </delete>
+    <delete id="deleteJobEmployeeList">
+        DELETE
+        FROM job_employee
+        <where>
+            job_employee_seq IN
+                <foreach item="jobEmployeeSeq" collection="employeeSeqList" open="(" separator="," close=")">
+                    #{jobEmployeeSeq}
+                </foreach>
+        </where>
+    </delete>
+</mapper>

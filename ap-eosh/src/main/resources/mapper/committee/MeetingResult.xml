@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.committee.repository.MeetingResultRepository">
+    <select id="selectMeetingResult" resultType="MeetingResultDto">
+        SELECT
+        meeting_result_seq
+        ,meeting_seq
+        ,committee_enum
+        ,result_subject
+        ,result_content
+        ,deadline_processing_dt
+        ,incharge_department_code
+        ,incharge_user_id
+        ,incharge_department_name
+        ,incharge_user_name
+        ,delete_bool
+        ,delete_user_id
+        ,delete_dtm
+        ,delete_ip
+        FROM meeting_result
+        <where>
+            AND meeting_seq = #{meetingSeq}
+        </where>
+    </select>
+
+    <insert id="insertMeetingResult" useGeneratedKeys="true" keyProperty="meetingResultSeq">
+        INSERT INTO meeting_result
+        ( committee_enum
+        , meeting_seq
+        , result_subject
+        , result_content
+        , deadline_processing_dt
+        , incharge_department_code
+        , incharge_user_id
+        , incharge_department_name
+        , incharge_user_name
+        , delete_bool
+        , insert_ip
+        , insert_user_id
+        , insert_dtm)
+        VALUES ( #{committeeEnum}
+               , #{meetingSeq}
+               , #{resultSubject}
+               , #{resultContent}
+               , #{deadlineProcessingDt}
+               , #{inchargeDepartmentCode}
+               , #{inchargeUserId}
+               , #{inchargeDepartmentName}
+               , #{inchargeUserName}
+               , false
+               , #{insertIp}
+               , #{insertUserId}
+               , #{insertDtm})
+    </insert>
+
+    <update id="updateMeetingResult">
+        UPDATE meeting_result SET
+        result_subject = #{resultSubject}
+        ,result_content = #{resultContent}
+        ,deadline_processing_dt = #{deadlineProcessingDt}
+        ,incharge_department_code = #{inchargeDepartmentCode}
+        ,incharge_user_id = #{inchargeUserId}
+        ,incharge_department_name = #{inchargeDepartmentName}
+        ,incharge_user_name = #{inchargeUserName}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        <where>
+            AND meeting_result_seq = #{meetingResultSeq}
+        </where>
+    </update>
+
+    <update id="deleteMeetingResult">
+        UPDATE meeting_result SET
+        delete_bool = true
+        ,delete_user_id = #{deleteUserId}
+        ,delete_dtm = #{deleteDtm}
+        ,delete_ip = #{deleteIp}
+        <where>
+            AND meeting_result_seq = #{meetingResultSeq}
+        </where>
+    </update>
+</mapper>

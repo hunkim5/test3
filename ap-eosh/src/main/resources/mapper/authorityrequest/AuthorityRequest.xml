@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.authoritymanagement.authorityrequest.repository.AuthorityRequestRepository">
+
+    <insert id="insertAuthorityRequest" useGeneratedKeys="true" keyProperty="userAuthorityRequestSeq">
+        INSERT INTO user_authority_request (
+             user_seq
+            ,request_level
+            ,request_period_start
+            ,request_period_end
+            ,request_reason
+            ,request_status
+            ,insert_user_id
+            ,insert_ip
+            ,update_user_id
+            ,update_ip
+        ) VALUES(
+            #{userSeq}
+            ,#{requestLevel}
+            ,#{requestPeriodStart}
+            ,#{requestPeriodEnd}
+            ,#{requestReason}
+            ,#{requestStatus}
+            ,#{insertUserId}
+            ,#{insertIp}
+            ,#{updateUserId}
+            ,#{updateIp}
+        )
+    </insert>
+    <select id="selectAuthorityRequestPage" resultType="AuthorityRequestDto">
+        SELECT
+            auth.user_authority_request_seq
+            ,auth.user_seq
+            ,usr.user_id
+            ,auth.request_level
+            ,auth.request_period_start
+            ,auth.request_period_end
+            ,auth.request_reason
+            ,auth.request_status
+            ,auth.insert_user_id
+            ,auth.insert_dtm
+            ,auth.insert_ip
+        FROM user_authority_request auth
+        JOIN user usr ON auth.user_seq = usr.user_seq
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(userSeq)">
+                AND auth.user_seq = #{userSeq}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(requestLevel)">
+                AND auth.request_level = #{requestLevel}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(requestStatus)">
+                AND auth.request_status = #{requestStatus}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(requestPeriodStart)">
+                AND auth.request_period_start >= #{requestPeriodStart}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(requestPeriodEnd)">
+                AND #{requestPeriodEnd} >= auth.request_period_end
+            </if>
+        </where>
+    </select>
+    <select id="selectAuthorityRequest" resultType="AuthorityRequestDto">
+        SELECT
+            user_authority_request_seq
+            ,user_id
+            ,request_level
+            ,request_period_start
+            ,request_period_end
+            ,request_reason
+            ,request_status
+            ,insert_user_id
+            ,insert_dtm
+            ,insert_ip
+        FROM user_authority_request
+        WHERE user_authority_request_seq = #{userAuthorityRequestSeq}
+    </select>
+    <update id="updateAuthorityRequest" >
+        UPDATE user_authority_request SET
+         request_level = #{requestLevel}
+        ,request_period_start = #{requestPeriodStart}
+        ,request_period_end = #{requestPeriodEnd}
+        ,request_reason = #{requestReason}
+        ,request_status = #{requestStatus}
+        ,update_user_id = #{updateUserId}
+        ,update_ip = #{updateIp}
+        WHERE user_authority_request_seq = #{userAuthorityRequestSeq}
+    </update>
+
+    <update id="updateAuthorityManagement">
+        UPDATE user_authority_management SET
+            user_grade_enum = #{requestLevel}
+            ,request_period_start = #{requestPeriodStart}
+            ,request_period_end = #{requestPeriodEnd}
+            ,request_authority_bool = true
+        WHERE user_id = #{userId}
+    </update>
+    <select id="selectAuthorityRequestInsert" resultType="AuthorityRequestInsertDto">
+        SELECT
+            user_authority_request_seq
+            ,user_seq
+            ,request_level
+            ,request_period_start
+            ,request_period_end
+            ,request_reason
+            ,request_status
+            ,insert_user_id
+            ,insert_ip
+        FROM user_authority_request
+        <where>
+            AND user_authority_request_seq  = #{userAuthorityRequestSeq}
+        </where>
+    </select>
+    <select id="selectAuthorityRequestUpdate" resultType="AuthorityRequestUpdateDto">
+        SELECT
+            user_authority_request_seq
+            ,user_seq
+            ,request_level
+            ,request_period_start
+            ,request_period_end
+            ,request_reason
+            ,request_status
+            ,update_user_id
+            ,update_ip
+        FROM user_authority_request
+        <where>
+            AND user_authority_request_seq  = #{userAuthorityRequestSeq}
+        </where>
+    </select>
+    <delete id="deleteAuthorityRequest">
+        DELETE
+        FROM user_authority_request
+        <where>
+            AND user_authority_request_seq  = #{userAuthorityRequestSeq}
+        </where>
+    </delete>
+</mapper>

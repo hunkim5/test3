@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.authoritymanagement.user.repository.AuthorityUserRepository">
+    <select id="selectAuthorityUserByUserId" resultType="UserEntity">
+        SELECT
+            user_seq,
+            user_id,
+            user_job_classification_classification_enum,
+            safety_office_code,
+            user_status_enum,
+            user_grade_enum,
+            request_authority_bool,
+            request_period_start,
+            request_period_end,
+            sex,
+            dept_cd
+        FROM user
+        <where>
+            AND user_id = #{userId}
+        </where>
+    </select>
+</mapper>

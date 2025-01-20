@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.jobplan.repository.ConfinedPlaceJobPlanPermissionRepository">
+    <select id="selectConfinedPlaceJobPlanPermission" resultType="ConfinedPlaceJobPlanPermissionDto">
+        SELECT job_seq
+           ,first_aid_kit_check_bool
+           ,fire_extinguisher_check_bool
+           ,eyewash_solution_bool
+           ,remark
+           ,no_entry_unauthorized_person_confined_space_work_bool
+           ,construction_measures_bool
+           ,tbm_process_bool
+           ,calibration_process_bool
+           ,obstacle_removal_action_bool
+           ,walkie_talkie_check_bool
+           ,protect_gear_status_check_bool
+           ,harmful_gases_start_measurement_point
+           ,harmful_gases_start_measurement_concentration_bool
+           ,harmful_gases_start_opinion
+           ,harmful_gases_drop_measurement_point
+           ,harmful_gases_drop_measurement_concentration_bool
+           ,harmful_gases_drop_opinion
+           ,harmful_gases_process_measurement_point
+           ,harmful_gases_process_measurement_concentration_bool
+           ,harmful_gases_process_opinion
+           ,ventialation_carried_out_start_dt
+           ,ventialation_carried_out_drop_dt
+           ,ventialation_carried_out_process_dt
+           ,ventialation_carried_out_start_opinion
+           ,ventialation_carried_out_drop_opinion
+           ,ventialation_carried_out_process_opinion
+        FROM confined_place_job_plan_permission
+        <where>
+           job_seq = #{jobSeq}
+        </where>
+    </select>
+
+    <insert id="insertConfinedPlaceJobPlanPermission">
+        INSERT INTO confined_place_job_plan_permission (
+            job_seq
+            ,first_aid_kit_check_bool
+            ,fire_extinguisher_check_bool
+            ,eyewash_solution_bool
+            ,remark
+            ,no_entry_unauthorized_person_confined_space_work_bool
+            ,construction_measures_bool
+            ,tbm_process_bool
+            ,calibration_process_bool
+            ,obstacle_removal_action_bool
+            ,walkie_talkie_check_bool
+            ,protect_gear_status_check_bool
+            ,harmful_gases_start_measurement_point
+            ,harmful_gases_start_measurement_concentration_bool
+            ,harmful_gases_start_opinion
+            ,harmful_gases_drop_measurement_point
+            ,harmful_gases_drop_measurement_concentration_bool
+            ,harmful_gases_drop_opinion
+            ,harmful_gases_process_measurement_point
+            ,harmful_gases_process_measurement_concentration_bool
+            ,harmful_gases_process_opinion
+            ,ventialation_carried_out_start_dt
+            ,ventialation_carried_out_drop_dt
+            ,ventialation_carried_out_process_dt
+            ,ventialation_carried_out_start_opinion
+            ,ventialation_carried_out_drop_opinion
+            ,ventialation_carried_out_process_opinion
+            ,insert_ip
+            ,insert_user_id
+            )
+        VALUES (
+            #{jobSeq}
+            ,#{firstAidKitCheckBool}
+            ,#{fireExtinguisherCheckBool}
+            ,#{eyewashSolutionBool}
+            ,#{remark}
+            ,#{noEntryUnauthorizedPersonConfinedSpaceWorkBool}
+            ,#{constructionMeasuresBool}
+            ,#{tbmProcessBool}
+            ,#{calibrationProcessBool}
+            ,#{obstacleRemovalActionBool}
+            ,#{walkieTalkieCheckBool}
+            ,#{protectGearStatusCheckBool}
+            ,#{harmfulGasesStartMeasurementPoint}
+            ,#{harmfulGasesStartMeasurementConcentrationBool}
+            ,#{harmfulGasesStartOpinion}
+            ,#{harmfulGasesDropMeasurementPoint}
+            ,#{harmfulGasesDropMeasurementConcentrationBool}
+            ,#{harmfulGasesDropOpinion}
+            ,#{harmfulGasesProcessMeasurementPoint}
+            ,#{harmfulGasesProcessMeasurementConcentrationBool}
+            ,#{harmfulGasesProcessOpinion}
+            ,#{ventialationCarriedOutStartDt}
+            ,#{ventialationCarriedOutDropDt}
+            ,#{ventialationCarriedOutProcessDt}
+            ,#{ventialationCarriedOutStartOpinion}
+            ,#{ventialationCarriedOutDropOpinion}
+            ,#{ventialationCarriedOutProcessOpinion}
+            ,#{insertIp}
+            ,#{insertUserId}
+            )
+    </insert>
+
+    <update id="updateConfinedPlaceJobPlanPermissionHarmful">
+        UPDATE confined_place_job_plan_permission
+        SET first_aid_kit_check_bool = #{firstAidKitCheckBool}
+            ,fire_extinguisher_check_bool = #{fireExtinguisherCheckBool}
+            ,eyewash_solution_bool = #{eyewashSolutionBool}
+            ,remark = #{remark}
+            ,no_entry_unauthorized_person_confined_space_work_bool = #{noEntryUnauthorizedPersonConfinedSpaceWorkBool}
+            ,construction_measures_bool = #{constructionMeasuresBool}
+            ,tbm_process_bool = #{tbmProcessBool}
+            ,calibration_process_bool = #{calibrationProcessBool}
+            ,obstacle_removal_action_bool = #{obstacleRemovalActionBool}
+            ,walkie_talkie_check_bool = #{walkieTalkieCheckBool}
+            ,protect_gear_status_check_bool = #{protectGearStatusCheckBool}
+            ,harmful_gases_start_measurement_point = #{harmfulGasesStartMeasurementPoint}
+            ,harmful_gases_start_measurement_concentration_bool = #{harmfulGasesStartMeasurementConcentrationBool}
+            ,harmful_gases_start_opinion = #{harmfulGasesStartOpinion}
+            ,harmful_gases_drop_measurement_point = #{harmfulGasesDropMeasurementPoint}
+            ,harmful_gases_drop_measurement_concentration_bool = #{harmfulGasesDropMeasurementConcentrationBool}
+            ,harmful_gases_drop_opinion = #{harmfulGasesDropOpinion}
+            ,harmful_gases_process_measurement_point = #{harmfulGasesProcessMeasurementPoint}
+            ,harmful_gases_process_measurement_concentration_bool = #{harmfulGasesProcessMeasurementConcentrationBool}
+            ,harmful_gases_process_opinion = #{harmfulGasesProcessOpinion}
+            ,ventialation_carried_out_start_dt = #{ventialationCarriedOutStartDt}
+            ,ventialation_carried_out_drop_dt = #{ventialationCarriedOutDropDt}
+            ,ventialation_carried_out_process_dt = #{ventialationCarriedOutProcessDt}
+            ,ventialation_carried_out_start_opinion = #{ventialationCarriedOutStartOpinion}
+            ,ventialation_carried_out_drop_opinion = #{ventialationCarriedOutDropOpinion}
+            ,ventialation_carried_out_process_opinion = #{ventialationCarriedOutProcessOpinion}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            job_seq = #{jobSeq}
+        </where>
+    </update>
+    <update id="updateConfinedPlaceJobPlanPermissionVentialation">
+        UPDATE confined_place_job_plan_permission
+        SET ventialation_carried_out_start_dt = #{ventialationCarriedOutStartDt}
+            ,ventialation_carried_out_start_opinion = #{ventialationCarriedOutStartOpinion}
+            ,ventialation_carried_out_drop_dt = #{ventialationCarriedOutDropDt}
+            ,ventialation_carried_out_drop_opinion = #{ventialationCarriedOutDropOpinion}
+            ,ventialation_carried_out_process_dt = #{ventialationCarriedOutProcessDt}
+            ,ventialation_carried_out_process_opinion = #{ventialationCarriedOutProcessOpinion}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            job_seq = #{jobSeq}
+        </where>
+    </update>
+
+    <delete id="deleteConfinedPlaceJobPlanPermission">
+        DELETE
+        FROM confined_place_job_plan_permission
+        <where>
+            job_seq IN (
+                <foreach collection="deleteSeqList" item="jobSeq" separator=",">
+                    #{jobSeq}
+                </foreach>
+            )
+        </where>
+    </delete>
+</mapper>

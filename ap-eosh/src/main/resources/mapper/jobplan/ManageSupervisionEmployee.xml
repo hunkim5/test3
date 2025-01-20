@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.jobplan.repository.ManageSupervisionEmployeeRepository">
+    <select id="selectManageSupervisionEmployeeList" resultType="ManageSupervisionEmployeeDto">
+           SELECT manage_supervision_employee_seq
+           ,tool_box_meeting_seq
+           ,job_seq
+           ,manage_supervision_employee_number
+           ,employee_name
+           ,department_code
+           ,department_name
+           ,main_bool
+        FROM manage_supervision_employee
+        WHERE
+            tool_box_meeting_seq = #{toolBoxMeetingSeq}
+    </select>
+    <select id="selectManageSupervisionEmployeeJobList" resultType="ManageSupervisionEmployeeDto">
+           SELECT manage_supervision_employee_seq
+           ,tool_box_meeting_seq
+           ,job_seq
+           ,manage_supervision_employee_number
+           ,employee_name
+           ,department_code
+           ,department_name
+           ,main_bool
+        FROM manage_supervision_employee
+        WHERE
+            job_seq = #{jobSeq}
+    </select>
+
+    <insert id="insertManageSupervisionEmployee">
+        INSERT INTO manage_supervision_employee (
+            tool_box_meeting_seq
+            ,job_seq
+            ,manage_supervision_employee_number
+            ,employee_name
+            ,department_code
+            ,department_name
+            ,main_bool
+            ,insert_user_id
+            ,insert_ip
+            )
+        VALUES (
+            #{toolBoxMeetingSeq}
+            ,#{jobSeq}
+            ,#{manageSupervisionEmployeeNumber}
+            ,#{employeeName}
+            ,#{departmentCode}
+            ,#{departmentName}
+            ,#{mainBool}
+            ,#{insertUserId}
+            ,#{insertIp}
+            )
+    </insert>
+
+    <insert id="insertManageSupervisionEmployeeList">
+        INSERT INTO manage_supervision_employee (
+            job_seq
+            ,manage_supervision_employee_number
+            ,employee_name
+            ,department_code
+            ,department_name
+            ,main_bool
+            ,insert_user_id
+            ,insert_ip
+            )
+        VALUES
+        <foreach collection="managerList" item="item" separator=",">
+           (
+               #{item.jobSeq}
+               ,#{item.manageSupervisionEmployeeNumber}
+               ,#{item.employeeName}
+               ,#{item.departmentCode}
+               ,#{item.departmentName}
+               ,#{item.mainBool}
+               ,#{item.insertUserId}
+               ,#{item.insertIp}
+           )
+       </foreach>
+    </insert>
+
+    <update id="updateManageSupervisionEmployee">
+        UPDATE manage_supervision_employee
+        SET
+             tool_box_meeting_seq = #{toolBoxMeetingSeq}
+            ,main_bool = #{mainBool}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            manage_supervision_employee_seq = #{manageSupervisionEmployeeSeq}
+        </where>
+    </update>
+
+    <delete id="deleteManageSupervisionEmployee">
+        DELETE
+        FROM manage_supervision_employee
+        <where>
+            manage_supervision_employee_seq = #{manageSupervisionEmployeeSeq}
+        </where>
+    </delete>
+    <delete id="deleteManageSupervisionEmployeeList">
+        DELETE
+        FROM manage_supervision_employee
+        <where>
+            manage_supervision_employee_seq IN
+            <foreach item="manageSupervisionEmployeeSeq" collection="managerSeqList" open="(" separator="," close=")">
+                #{manageSupervisionEmployeeSeq}
+            </foreach>
+        </where>
+    </delete>
+</mapper>

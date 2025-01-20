@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.certification.facility.repository.CertificationFacilityRepository">
+    <select id="selectCertificationFacilityPage" resultType="CertificationFacilityDto">
+        SELECT facility_seq
+            ,work_facility_classification_enum
+            ,title
+            ,introduction_code
+            ,introduction_facility_code
+            ,product_name
+            ,model_name
+            ,model_number
+            ,quantity
+            ,product_manufacturer_name
+            ,safety_inspection_dt
+            ,safety_certification_bool
+            ,autonomy_safety_check_report_bool
+            ,safety_inspection_bool
+            ,etc_bool
+            ,movement_area_registration_no
+            ,registration_dt
+            ,expiration_dt
+            ,first_time_inspection_dt
+            ,product_manufacturer_phoneno
+            ,product_manufacturer_email
+            ,safety_inspection_expiration_dt
+            ,new_introduction_location
+            ,add_comment
+            ,multiple_file_safetycertification_uuid
+            ,multiple_file_safetyinspection_uuid
+            ,multiple_file_autonomysafety_uuid
+            ,approval_work_report_status_enum
+            ,request_department
+            ,storage_department_code
+            ,report_no
+            ,reject_reason
+            ,insert_dtm
+        FROM work_report_facility
+        <where>
+            AND approval_work_report_status_enum IN ('APPROVAL','CLOSE')
+            <if test="searchDto.safetyCertificationBool
+                          or searchDto.autonomySafetyCheckReportBool
+                          or searchDto.safetyInspectionBool
+                          or searchDto.etcBool">
+            AND (
+                <if test="searchDto.safetyCertificationBool">
+                    safety_certification_bool = true
+                </if>
+                <if test="searchDto.autonomySafetyCheckReportBool">
+                    <if test="searchDto.safetyCertificationBool">OR</if>
+                    autonomy_safety_check_report_bool = true
+                </if>
+                <if test="searchDto.safetyInspectionBool">
+                    <if test="searchDto.safetyCertificationBool
+                          or searchDto.autonomySafetyCheckReportBool">OR</if>
+                    safety_inspection_bool = true
+                </if>
+                <if test="searchDto.etcBool">
+                    <if test="searchDto.safetyCertificationBool
+                          or searchDto.autonomySafetyCheckReportBool
+                          or searchDto.safetyInspectionBool">OR</if>
+                    etc_bool = true
+                </if>
+            )
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.registrationDt)">
+                AND registration_dt = #{searchDto.registrationDt}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.expirationDt)">
+                AND expiration_dt = #{searchDto.expirationDt}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.introductionFacilityCode)">
+                AND introduction_facility_code = #{searchDto.introductionFacilityCode}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.productName)">
+                AND product_name LIKE #{searchDto.productName}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.modelName)">
+                AND model_name LIKE #{searchDto.modelName}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.safetyInspectionExpirationDt)">
+                AND safety_inspection_expiration_dt = #{searchDto.safetyInspectionExpirationDt}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCertificationFacility" resultType="CertificationFacilityDto">
+        SELECT facility_seq
+             ,work_facility_classification_enum
+             ,title
+             ,introduction_code
+             ,introduction_facility_code
+             ,product_name
+             ,model_name
+             ,model_number
+             ,quantity
+             ,product_manufacturer_name
+             ,safety_inspection_dt
+             ,safety_certification_bool
+             ,autonomy_safety_check_report_bool
+             ,safety_inspection_bool
+             ,etc_bool
+             ,movement_area_registration_no
+             ,registration_dt
+             ,expiration_dt
+             ,first_time_inspection_dt
+             ,product_manufacturer_phoneno
+             ,product_manufacturer_email
+             ,safety_inspection_expiration_dt
+             ,new_introduction_location
+             ,add_comment
+             ,multiple_file_safetycertification_uuid
+             ,multiple_file_safetyinspection_uuid
+             ,multiple_file_autonomysafety_uuid
+             ,approval_work_report_status_enum
+             ,request_department
+             ,storage_department_code
+             ,report_no
+             ,reject_reason
+        FROM work_report_facility
+        WHERE
+            facility_seq = #{facilitySeq}
+    </select>
+
+    <update id="updateCertificationFacility">
+        UPDATE work_report_facility SET
+        quantity = #{quantity}
+        ,safety_certification_bool = #{safetyCertificationBool}
+        ,autonomy_safety_check_report_bool = #{autonomySafetyCheckReportBool}
+        ,safety_inspection_bool = #{safetyInspectionBool}
+        ,etc_bool = #{etcBool}
+        ,movement_area_registration_no = #{movementAreaRegistrationNo}
+        ,expiration_dt = #{expirationDt}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            AND facility_seq = #{facilitySeq}
+        </where>
+    </update>
+</mapper>

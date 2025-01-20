@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.checklist.repository.ChecklistRepository">
+    <select id="selectChecklistPage" resultType="ChecklistDto">
+        SELECT
+        	 checklist_seq
+        	,job_seq
+        	,checklist_division_code
+        	,checklist_perform_enum
+        	,checklist_subject
+        	,inspector_id
+        	,inspector_name
+        	,inspector_department_id
+        	,inspector_department_name
+        	,check_dt
+        	,inspection_matters
+        	,check_target
+        	,check_location
+        	,partner_company
+        	,week_branch_code
+        FROM checklist
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.checklistSubject)">
+                 AND checklist_subject LIKE #{searchDto.checklistSubject}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.checklistDivisionCode)">
+                 AND checklist_division_code = #{searchDto.checklistDivisionCode}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.inspectorId)">
+                 AND inspector_id = #{searchDto.inspectorId}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.inspectorDepartmentId)">
+                 AND inspector_department_id = #{searchDto.inspectorDepartmentId}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.checkStartDt)">
+                <![CDATA[AND check_start_dt >= #{searchDto.checkStartDt}]]>
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.checkEndDt)">
+                <![CDATA[AND check_start_dt <= #{searchDto.checkEndDt}]]>
+            </if>
+        </where>
+        ORDER BY insert_dtm DESC
+    </select>
+
+    <select id="selectChecklist" resultType="ChecklistDto">
+        SELECT
+        	 checklist_seq
+        	,job_seq
+        	,checklist_division_code
+        	,checklist_perform_enum
+        	,checklist_subject
+        	,inspector_id
+        	,inspector_name
+        	,inspector_department_id
+        	,inspector_department_name
+        	,check_dt
+        	,inspection_matters
+        	,check_target
+        	,check_location
+        	,partner_company
+        	,week_branch_code
+        FROM checklist
+        <where>
+            checklist_seq = #{checklistSeq}
+        </where>
+    </select>
+    <select id="selectChecklistByJobPlanSeq" resultType="Long">
+        SELECT checklist_seq
+        FROM checklist
+        <where>
+            job_seq = #{jobSeq}
+        </where>
+    </select>
+
+    <insert id="insertChecklist"  useGeneratedKeys="true" keyProperty="checklistSeq">
+        INSERT INTO checklist (
+            job_seq
+            ,checklist_division_code
+            ,checklist_perform_enum
+            ,checklist_subject
+            ,inspector_id
+            ,inspector_name
+            ,inspector_department_id
+            ,inspector_department_name
+            ,check_dt
+            ,inspection_matters
+            ,check_target
+            ,check_location
+            ,partner_company
+            ,week_branch_code
+            ,insert_user_id
+            ,insert_ip
+            )
+        VALUES (
+            #{jobSeq}
+            ,#{checklistDivisionCode}
+            ,#{checklistPerformEnum}
+            ,#{checklistSubject}
+            ,#{inspectorId}
+            ,#{inspectorName}
+            ,#{inspectorDepartmentId}
+            ,#{inspectorDepartmentName}
+            ,#{checkDt}
+            ,#{inspectionMatters}
+            ,#{checkTarget}
+            ,#{checkLocation}
+            ,#{partnerCompany}
+            ,#{weekBranchCode}
+            ,#{insertUserId}
+            ,#{insertIp}
+            )
+    </insert>
+
+    <update id="updateChecklist">
+        UPDATE checklist
+        SET job_seq = #{jobSeq}
+            ,checklist_division_code = #{checklistDivisionCode}
+            ,checklist_perform_enum = #{checklistPerformEnum}
+            ,checklist_subject = #{checklistSubject}
+            ,inspector_id = #{inspectorId}
+            ,inspector_name = #{inspectorName}
+            ,inspector_department_id = #{inspectorDepartmentId}
+            ,inspector_department_name = #{inspectorDepartmentName}
+            ,check_dt = #{checkDt}
+            ,inspection_matters = #{inspectionMatters}
+            ,check_target = #{checkTarget}
+            ,check_location = #{checkLocation}
+            ,partner_company = #{partnerCompany}
+            ,week_branch_code = #{weekBranchCode}
+            ,update_user_id = #{updateUserId}
+            ,update_ip = #{updateIp}
+        <where>
+            checklist_seq = #{checklistSeq}
+        </where>
+    </update>
+
+    <delete id="deleteChecklist">
+        DELETE
+        FROM checklist
+        <where>
+            checklist_seq IN (
+                <foreach collection="deleteSeqList" item="checklistSeq" separator=",">
+                    #{checklistSeq}
+                </foreach>
+            )
+        </where>
+    </delete>
+</mapper>

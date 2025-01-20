@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.checklist.repository.ChecklistQuestionResultRepository">
+    <select id="selectChecklistQuestionResultList" resultType="ChecklistQuestionResultDto">
+       SELECT
+             checklist_question_result_seq
+            ,checklist_seq
+            ,checklist_question_code
+            ,suitable_enum
+            ,attach_file_uuid
+            ,remark
+        FROM checklist_question_result
+        WHERE
+            checklist_seq = #{checklistSeq}
+    </select>
+
+    <insert id="insertChecklistQuestionResultList">
+        INSERT INTO checklist_question_result (
+            checklist_seq
+            ,checklist_question_code
+            ,suitable_enum
+            ,attach_file_uuid
+            ,remark
+            ,insert_user_id
+            ,insert_ip
+            )
+        VALUES
+        <foreach collection="checklistResultList" item="item" separator=",">
+            (
+                #{item.checklistSeq}
+                ,#{item.checklistQuestionCode}
+                ,#{item.suitableEnum}
+                ,#{item.attachFileUuid}
+                ,#{item.remark}
+                ,#{item.insertUserId}
+                ,#{item.insertIp}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateChecklistQuestionResult">
+        UPDATE checklist_question_result
+        SET checklist_seq = #{checklistSeq}
+            ,checklist_question_code = #{checklistQuestionCode}
+            ,suitable_enum = #{suitableEnum}
+            ,attach_file_uuid = #{attachFileUuid}
+            ,remark = #{remark}
+            ,update_user_id = #{updateUserId}
+            ,update_ip = #{updateIp}
+        <where>
+            checklist_question_result_seq = #{checklistQuestionResultSeq}
+        </where>
+    </update>
+
+    <delete id="deleteChecklistQuestionResultList">
+        DELETE
+        FROM checklist_question_result
+        <where>
+            checklist_seq IN (
+                <foreach collection="deleteSeqList" item="checklistSeq" separator=",">
+                    #{checklistSeq}
+                </foreach>
+            )
+        </where>
+    </delete>
+</mapper>

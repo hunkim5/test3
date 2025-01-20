@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.committee.repository.MeetingAttendUserRepository">
+
+    <select id="selectMeetingAttendUser" resultType="MeetingAttendUserDto">
+        SELECT meeting_attend_user_seq
+        ,meeting_seq
+        ,committee_enum
+        ,external_bool
+        ,external_company_name
+        ,meeting_attend_user_id
+        ,meeting_attend_user_name
+        ,meeting_attend_department_id
+        ,meeting_attend_department_name
+        ,office
+        ,check_bool
+        ,check_dtm
+        ,committee_division_code
+        FROM meeting_attend_user
+        <where>
+            AND meeting_seq = #{meetingSeq}
+            AND external_bool = #{externalBool}
+        </where>
+    </select>
+
+    <insert id="insertMeetingAttendUser" useGeneratedKeys="true" keyProperty="meetingAttendUserSeq">
+        INSERT INTO meeting_attend_user
+        ( committee_enum
+        , meeting_seq
+        , external_bool
+        , external_company_name
+        , meeting_attend_user_id
+        , meeting_attend_user_name
+        , meeting_attend_department_id
+        , meeting_attend_department_name
+        , office
+        , check_bool
+        , committee_division_code
+        , insert_ip
+        , insert_user_id
+        , insert_dtm)
+        VALUES ( #{committeeEnum}
+               , #{meetingSeq}
+               , #{externalBool}
+               , #{externalCompanyName}
+               , #{meetingAttendUserId}
+               , #{meetingAttendUserName}
+               , #{meetingAttendDepartmentId}
+               , #{meetingAttendDepartmentName}
+               , #{office}
+               , false
+               , #{committeeDivisionCode}
+               , #{insertIp}
+               , #{insertUserId}
+               , #{insertDtm})
+    </insert>
+
+    <update id="updateMeetingAttendUser">
+        UPDATE meeting_attend_user SET
+        external_company_name = #{externalCompanyName}
+        ,meeting_attend_user_id = #{meetingAttendUserId}
+        ,meeting_attend_user_name = #{meetingAttendUserName}
+        ,meeting_attend_department_id = #{meetingAttendDepartmentId}
+        ,meeting_attend_department_name = #{meetingAttendDepartmentName}
+        ,office = #{office}
+        ,check_bool = #{checkBool}
+        ,check_dtm = #{checkDtm}
+        ,committee_division_code = #{committeeDivisionCode}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        <where>
+            meeting_attend_user_seq = #{meetingAttendUserSeq}
+        </where>
+    </update>
+
+    <delete id="deleteMeetingAttendUser">
+        DELETE
+        FROM meeting_attend_user
+        <where>
+            AND meeting_attend_user_seq = #{meetingAttendUserSeq}
+        </where>
+    </delete>
+
+
+    <update id="updateUserCheck">
+        UPDATE meeting_attend_user SET
+        check_bool = true
+        ,check_dtm = #{checkDtm}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        <where>
+            AND meeting_attend_user_seq = #{meetingAttendUserSeq}
+        </where>
+    </update>
+</mapper>

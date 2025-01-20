@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.risk.repository.CodeRiskSeverityRepository">
+    <select id="selectRiskSeverityClassificationList" resultType="CodeRiskSeverityClassificationEntity">
+        SELECT
+             t_mast.severity_classification_seq
+            ,t_mast.risk_version_seq
+            ,t_mast.severity_subject
+            ,t_mast.lowest_severity_content
+            ,t_mast.low_severity_content
+            ,t_mast.medium_severity_content
+            ,t_mast.high_severity_content
+            ,t_mast.highest_severity_content
+            ,t_mast.delete_bool
+            ,t_mast.delete_user_id
+            ,t_mast.delete_dtm
+            ,t_mast.delete_ip
+            ,t_mast.insert_user_id
+            ,t_mast.insert_dtm
+            ,t_mast.insert_ip
+            ,t_mast.update_user_id
+            ,t_mast.update_dtm
+            ,t_mast.update_ip
+        FROM
+            code_risk_severity_classification t_mast
+        <where>
+        and t_mast.risk_version_seq = #{riskVersionSeq}
+        and t_mast.delete_bool = false
+        </where>
+        ORDER BY
+            t_mast.severity_classification_seq asc
+    </select>
+
+    <update id="deleteRiskSeverityClassificationList">
+        UPDATE code_risk_severity_classification
+        SET
+            delete_bool = true
+            ,delete_user_id = #{codeRiskSeverityClassificationEntity.deleteUserId}
+            ,delete_dtm = #{codeRiskSeverityClassificationEntity.deleteDtm}
+            ,delete_ip = #{codeRiskSeverityClassificationEntity.deleteIp}
+        <where>
+            and risk_version_seq = #{codeRiskSeverityClassificationEntity.riskVersionSeq}
+            and delete_bool = false
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(excludeSeverityClassificationSeqList)">
+            and severity_classification_seq not in (
+                <foreach collection="excludeSeverityClassificationSeqList" item="item" separator=" , ">
+                #{item}
+                </foreach>
+            )
+            </if>
+        </where>
+    </update>
+
+    <insert id="insertRiskSeverityClassification" useGeneratedKeys="true" keyProperty="severityClassificationSeq">
+        INSERT INTO code_risk_severity_classification
+            ( risk_version_seq, severity_subject, lowest_severity_content, low_severity_content, medium_severity_content, high_severity_content, highest_severity_content, insert_user_id, insert_dtm, insert_ip, update_user_id, update_dtm, update_ip )
+        VALUES
+            ( #{riskVersionSeq}, #{severitySubject}, #{lowestSeverityContent}, #{lowSeverityContent}, #{mediumSeverityContent}, #{highSeverityContent}, #{highestSeverityContent}, #{insertUserId}, #{insertDtm}, #{insertIp}, #{updateUserId}, #{updateDtm}, #{updateIp} )
+    </insert>
+    <update id="updateRiskSeverityClassification">
+        UPDATE code_risk_severity_classification
+        SET
+            severity_subject = #{severitySubject}
+            ,lowest_severity_content = #{lowestSeverityContent}
+            ,low_severity_content = #{lowSeverityContent}
+            ,medium_severity_content = #{mediumSeverityContent}
+            ,high_severity_content = #{highSeverityContent}
+            ,highest_severity_content = #{highestSeverityContent}
+            ,update_user_id = #{updateUserId}
+            ,update_dtm = #{updateDtm}
+            ,update_ip = #{updateIp}
+        <where>
+            and risk_version_seq = #{riskVersionSeq}
+            and severity_classification_seq = #{severityClassificationSeq}
+        </where>
+    </update>
+</mapper>

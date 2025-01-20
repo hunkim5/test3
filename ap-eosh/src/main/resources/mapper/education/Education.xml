@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.education.repository.EducationRepository">
+
+    <select id="selectEducationPage" resultType="EducationListDto">
+           SELECT edu.education_seq
+           ,edu.education_classification_code
+           ,edu.education_dt
+           ,edu.in_charge_code
+           ,edu.education_data
+           ,edu.education_content
+           ,edu.multiple_file_uuid
+           ,edu.delete_bool
+           ,edu.delete_user_id
+           ,edu.delete_dtm
+           ,edu.delete_ip
+        FROM education edu
+        <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.userId)">
+            JOIN education_instructor ei ON (edu.education_seq = ei.education_seq AND ei.user_id = #{searchDto.userId})
+        </if>
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.educationDtStart)">
+                AND edu.education_dt >= #{searchDto.educationDtStart}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.educationDtEnd)">
+                AND edu.education_dt <![CDATA[<=]]> #{searchDto.educationDtEnd}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.educationClassificationCode)">
+                AND edu.education_classification_code = #{searchDto.educationClassificationCode}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.inChargeCode)">
+                AND edu.in_charge_code = #{searchDto.inChargeCode}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEducation" resultType="EducationDto">
+           SELECT education_seq
+           ,education_classification_code
+           ,education_dt
+           ,in_charge_code
+           ,education_data
+           ,education_content
+           ,multiple_file_uuid
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM education
+        WHERE
+            education_seq = #{educationSeq}
+    </select>
+
+    <insert id="insertEducation" useGeneratedKeys="true" keyProperty="educationSeq">
+        INSERT INTO education
+        (education_classification_code
+        ,education_dt
+        ,in_charge_code
+        ,education_data
+        ,education_content
+        ,multiple_file_uuid
+        ,delete_bool
+        ,delete_user_id
+        ,delete_dtm
+        ,delete_ip
+        ,insert_ip
+        ,insert_user_id)
+ VALUES
+        (#{educationClassificationCode}
+        ,#{educationDt}
+        ,#{inChargeCode}
+        ,#{educationData}
+        ,#{educationContent}
+        ,#{multipleFileUuid}
+        ,#{deleteBool}
+        ,#{deleteUserId}
+        ,#{deleteDtm}
+        ,#{deleteIp}
+        ,#{insertIp}
+        ,#{insertUserId})
+    </insert>
+
+    <update id="updateEducation">
+        UPDATE education SET
+        education_classification_code = #{educationClassificationCode}
+        ,education_dt = #{educationDt}
+        ,in_charge_code = #{inChargeCode}
+        ,education_data = #{educationData}
+        ,education_content = #{educationContent}
+        ,multiple_file_uuid = #{multipleFileUuid}
+        ,delete_bool = #{deleteBool}
+        ,delete_user_id = #{deleteUserId}
+        ,delete_dtm = #{deleteDtm}
+        ,delete_ip = #{deleteIp}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            AND education_seq = #{educationSeq}
+        </where>
+    </update>
+
+    <delete id="deleteEducation">
+        DELETE
+        FROM education
+        <where>
+            AND education_seq = #{educationSeq}
+        </where>
+    </delete>
+
+</mapper>

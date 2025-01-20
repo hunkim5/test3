@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.mainpage.repository.MainPageEducationRepository">
+    <select id="selectEducationList" resultType="MainPageEducationDto">
+           SELECT
+              edu.education_seq
+            , edu.education_dt
+            , edu.education_content
+            , edu.education_classification_code
+           FROM education edu
+               INNER JOIN education_attend_user eau ON(edu.education_seq = eau.education_seq AND eau.user_id = #{userId})
+        <where>
+            AND edu.education_dt <![CDATA[>=]]> #{educationDtStart}
+            AND edu.education_dt <![CDATA[<=]]> #{educationDtEnd}
+        </where>
+    </select>
+</mapper>

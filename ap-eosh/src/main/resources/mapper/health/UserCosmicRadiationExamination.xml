@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.personaldetail.health.repository.UserCosmicRadiationExaminationRepository">
+
+    <select id="selectUserCosmicRadiationExaminationPage" resultType="UserCosmicRadiationExaminationPageDto">
+        SELECT ucr.user_seq
+           , ucr.standard_yyyy
+           , ucr.examination_status_enum
+           , ucr.examination_dt
+           , ucr.hemoglobin_comment
+           , ucr.white_blood_cell_comment
+           , ucr.platelet_comment
+           , ucr.diagnosis_opinion_comment
+           , ucr.leave_of_absence_dt
+           , ucr.return_to_work_dt
+           , ucr.reexamination_comment
+           , ucr.multiple_file_uuid
+           , usr.user_id
+           , usr.user_job_classification_classification_enum
+        FROM user_cosmic_radiation_examination ucr
+        JOIN `user` usr ON ucr.user_seq = usr.user_seq
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.userJobClassificationClassificationEnum)">
+                AND usr.user_job_classification_classification_enum = #{searchDto.userJobClassificationClassificationEnum}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.userId)">
+                AND usr.user_id = #{searchDto.userId}
+            </if>
+        </where>
+    </select>
+    <select id="selectUserCosmicRadiationExamination" resultType="UserCosmicRadiationExaminationDto">
+           SELECT user_seq
+           ,standard_yyyy
+           ,examination_status_enum
+           ,examination_dt
+           ,white_blood_cell_comment
+           ,platelet_comment
+           ,diagnosis_opinion_comment
+           ,leave_of_absence_dt
+           ,return_to_work_dt
+           ,reexamination_comment
+           ,first_special_note
+           ,hemoglobin_comment
+           ,reexamination_special_note
+           ,multiple_file_uuid
+        FROM user_cosmic_radiation_examination
+        WHERE
+            user_seq = #{userSeq}
+        AND standard_yyyy = #{standardYyyy}
+    </select>
+
+    <insert id="insertUserCosmicRadiationExamination">
+        INSERT INTO user_cosmic_radiation_examination
+        (user_seq
+        ,standard_yyyy
+        ,examination_status_enum
+        ,examination_dt
+        ,white_blood_cell_comment
+        ,platelet_comment
+        ,diagnosis_opinion_comment
+        ,leave_of_absence_dt
+        ,return_to_work_dt
+        ,reexamination_comment
+        ,multiple_file_uuid
+        ,insert_ip
+        ,insert_user_id)
+ VALUES
+        (#{userSeq}
+        ,#{standardYyyy}
+        ,#{examinationStatusEnum}
+        ,#{examinationDt}
+        ,#{whiteBloodCellComment}
+        ,#{plateletComment}
+        ,#{diagnosisOpinionComment}
+        ,#{leaveOfAbsenceDt}
+        ,#{returnToWorkDt}
+        ,#{reexaminationComment}
+        ,#{multipleFileUuid}
+        ,#{insertIp}
+        ,#{insertUserId})
+    </insert>
+
+    <update id="updateUserCosmicRadiationExamination">
+        UPDATE user_cosmic_radiation_examination
+        SET
+        examination_status_enum = #{examinationStatusEnum}
+        ,examination_dt = #{examinationDt}
+        ,white_blood_cell_comment = #{whiteBloodCellComment}
+        ,platelet_comment = #{plateletComment}
+        ,diagnosis_opinion_comment = #{diagnosisOpinionComment}
+        ,leave_of_absence_dt = #{leaveOfAbsenceDt}
+        ,return_to_work_dt = #{returnToWorkDt}
+        ,reexamination_comment = #{reexaminationComment}
+        ,reexamination_special_note = #{reexaminationSpecialNote}
+        ,hemoglobin_comment = #{hemoglobinComment}
+        ,first_special_note = #{firstSpecialNote}
+        ,multiple_file_uuid = #{multipleFileUuid}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            user_seq = #{userSeq}
+        AND standard_yyyy = #{standardYyyy}
+        </where>
+    </update>
+
+    <delete id="deleteUserCosmicRadiationExamination">
+             DELETE
+             FROM user_cosmic_radiation_examination
+             WHERE user_seq=#{userSeq}
+             AND standard_yyyy = #{standardYyyy}
+     </delete>
+
+     <select id="selectCosmicRadiationExaminationInfo" resultType="UserCosmicRadiationExaminationDto">
+         SELECT
+             user_seq
+         FROM user_cosmic_radiation_examination
+         WHERE user_seq = #{userSeq} and standard_yyyy = #{standardYyyy}
+     </select>
+
+</mapper>

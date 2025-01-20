@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.health.healthdailylog.repository.HealthDailyLogRepository">
+
+    <select id="selectHealthDailyLogPage" resultType="HealthDailyLogDto">
+           SELECT health_daily_log_seq
+           ,health_dt
+           ,user_id
+           ,user_name
+           ,department_id
+           ,department_name
+           ,symptoms_content
+           ,etc_content
+           ,use_product_content
+           ,use_quantity_comment
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM health_daily_log
+        <where>
+            AND delete_bool = 0
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.symptomsContent)">
+                AND symptoms_content = #{searchDto.symptomsContent}
+            </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.etcContent)">
+               AND etc_content = #{searchDto.etcContent}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.useProductContent)">
+               AND use_product_content = #{searchDto.useProductContent}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.useQuantityComment)">
+               AND use_quantity_comment = #{searchDto.useQuantityComment}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.departmentName)">
+               AND department_name = #{searchDto.departmentName}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.userName)">
+               AND user_name = #{searchDto.userName}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.searchToDt)">
+               AND health_dt <![CDATA[<=]]> #{searchDto.searchToDt}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.searchFromDt)">
+               AND health_dt <![CDATA[>=]]> #{searchDto.searchFromDt}
+           </if>
+        </where>
+    </select>
+
+    <select id="selectHealthDailyLog" resultType="HealthDailyLogDto">
+           SELECT health_daily_log_seq
+           ,health_dt
+           ,user_id
+           ,user_name
+           ,department_id
+           ,department_name
+           ,symptoms_content
+           ,etc_content
+           ,use_product_content
+           ,use_quantity_comment
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM health_daily_log
+        WHERE
+            health_daily_log_seq = #{healthDailyLogSeq}
+    </select>
+
+    <insert id="insertHealthDailyLog">
+        INSERT INTO health_daily_log
+        (health_dt
+        ,user_id
+        ,user_name
+        ,department_id
+        ,department_name
+        ,symptoms_content
+        ,etc_content
+        ,use_product_content
+        ,use_quantity_comment
+        ,delete_bool
+        ,insert_ip
+        ,insert_user_id)
+ VALUES
+        (#{healthDt}
+        ,#{userId}
+        ,#{userName}
+        ,#{departmentId}
+        ,#{departmentName}
+        ,#{symptomsContent}
+        ,#{etcContent}
+        ,#{useProductContent}
+        ,#{useQuantityComment}
+        ,#{deleteBool}
+        ,#{insertIp}
+        ,#{insertUserId})
+    </insert>
+
+    <update id="updateHealthDailyLog">
+        UPDATE health_daily_log SET
+        health_dt = #{healthDt}
+        ,user_id = #{userId}
+        ,user_name = #{userName}
+        ,department_id = #{departmentId}
+        ,department_name = #{departmentName}
+        ,symptoms_content = #{symptomsContent}
+        ,etc_content = #{etcContent}
+        ,use_product_content = #{useProductContent}
+        ,use_quantity_comment = #{useQuantityComment}
+        ,delete_bool = #{deleteBool}
+        ,delete_user_id = #{deleteUserId}
+        ,delete_dtm = #{deleteDtm}
+        ,delete_ip = #{deleteIp}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            health_daily_log_seq = #{healthDailyLogSeq}
+        </where>
+    </update>
+
+    <delete id="deleteHealthDailyLog">
+        DELETE
+        FROM health_daily_log
+        <where>
+            health_daily_log_seq = #{healthDailyLogSeq}
+        </where>
+    </delete>
+
+    <select id="selectHealthDailyExcelList" resultType="HealthDailyLogDto">
+        SELECT
+          health_dt,
+          user_name,
+          department_name,
+          symptoms_content,
+          etc_content,
+          use_product_content,
+          use_quantity_comment
+        FROM
+          health_daily_log
+        <where>
+            delete_bool = false
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.searchToDt)">
+               AND health_dt <![CDATA[<=]]> #{searchDto.searchToDt}
+           </if>
+           <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.searchFromDt)">
+               AND health_dt <![CDATA[>=]]> #{searchDto.searchFromDt}
+           </if>
+        </where>
+    </select>
+
+</mapper>

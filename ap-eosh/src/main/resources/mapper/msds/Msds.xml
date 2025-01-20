@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.msds.repository.MsdsRepository">
+    <select id="selectMsdsPage" resultType="MsdsDto">
+           SELECT msds_seq
+           ,msds_division
+           ,chemistry_substance_name
+           ,cas_id
+           ,hazardous_substances_subject_management_code
+           ,special_management_substances_code
+           ,exposure_criteria_setting_substances_code
+           ,prohibited_substances
+           ,process_safety_report_code
+           ,special_health_hazard
+           ,work_environment_hazard
+           ,msds_post
+           ,msds_education_comment
+           ,contact_comment
+           ,provider_comment
+           ,english_language_file_uuid
+           ,korean_language_file_uuid
+           ,warning_sign_file_uuid
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM msds
+        <where>
+             <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.msdsDivision)">
+                   msds_division = #{searchDto.msdsDivision}
+             </if>
+                       <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.chemistrySubstanceName)">
+                              AND chemistry_substance_name = #{searchDto.chemistrySubstanceName}
+                       </if>
+                       <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.casId)">
+                               AND cas_id = #{searchDto.casId}
+                       </if>
+                       <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.lawCode)">
+                                  <choose>
+                                     <when test="searchDto.lawCode == 'hazardousSubstancesSubjectManagementCode'">
+                                       AND  hazardous_substances_subject_management_code = 'Y'
+                                     </when>
+                                     <when test="searchDto.lawCode == 'specialManagementSubstancesCode'">
+                                       AND  special_management_substances_code = 'Y'
+                                     </when>
+                                     <when test="searchDto.lawCode == 'prohibitedSubstances'">
+                                       AND  prohibited_substances = 'Y'
+                                     </when>
+                                     <when test="searchDto.lawCode == 'processSafetyReportCode'">
+                                       AND  process_safety_report_code = 'Y'
+                                     </when>
+                              </choose>
+                        </if>
+                 <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.specialHealthHazard)">
+                          AND special_health_hazard = #{searchDto.specialHealthHazard}
+                 </if>
+                 <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.workEnvironmentHazard)">
+                           AND work_environment_hazard = #{searchDto.workEnvironmentHazard}
+                 </if>
+        </where>
+    </select>
+
+    <select id="selectMsds" resultType="MsdsDto">
+           SELECT msds_seq
+           ,msds_division
+           ,chemistry_substance_name
+           ,cas_id
+           ,hazardous_substances_subject_management_code
+           ,special_management_substances_code
+           ,exposure_criteria_setting_substances_code
+           ,prohibited_substances
+           ,process_safety_report_code
+           ,special_health_hazard
+           ,work_environment_hazard
+           ,msds_post
+           ,msds_education_comment
+           ,contact_comment
+           ,provider_comment
+           ,english_language_file_uuid
+           ,korean_language_file_uuid
+           ,warning_sign_file_uuid
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM msds
+        WHERE
+            msds_seq = #{msdsSeq}
+    </select>
+
+    <insert id="insertMsds">
+        INSERT INTO msds
+        (msds_division
+        ,chemistry_substance_name
+        ,cas_id
+        ,hazardous_substances_subject_management_code
+        ,special_management_substances_code
+        ,exposure_criteria_setting_substances_code
+        ,prohibited_substances
+        ,process_safety_report_code
+        ,special_health_hazard
+        ,work_environment_hazard
+        ,msds_post
+        ,msds_education_comment
+        ,contact_comment
+        ,provider_comment
+        ,english_language_file_uuid
+        ,korean_language_file_uuid
+        ,warning_sign_file_uuid
+        ,delete_bool
+        ,delete_user_id
+        ,delete_dtm
+        ,delete_ip
+        ,insert_ip
+        ,insert_user_id)
+ VALUES
+        (#{msdsDivision}
+        ,#{chemistrySubstanceName}
+        ,#{casId}
+        ,#{hazardousSubstancesSubjectManagementCode}
+        ,#{specialManagementSubstancesCode}
+        ,#{exposureCriteriaSettingSubstancesCode}
+        ,#{prohibitedSubstances}
+        ,#{processSafetyReportCode}
+        ,#{specialHealthHazard}
+        ,#{workEnvironmentHazard}
+        ,#{msdsPost}
+        ,#{msdsEducationComment}
+        ,#{contactComment}
+        ,#{providerComment}
+        ,#{englishLanguageFileUuid}
+        ,#{koreanLanguageFileUuid}
+        ,#{warningSignFileUuid}
+        ,#{deleteBool}
+        ,#{deleteUserId}
+        ,#{deleteDtm}
+        ,#{deleteIp}
+        ,#{insertIp}
+        ,#{insertUserId})
+    </insert>
+
+    <update id="updateMsds">
+        UPDATE msds SET
+        msds_division = #{msdsDivision}
+        ,chemistry_substance_name = #{chemistrySubstanceName}
+        ,cas_id = #{casId}
+        ,hazardous_substances_subject_management_code = #{hazardousSubstancesSubjectManagementCode}
+        ,special_management_substances_code = #{specialManagementSubstancesCode}
+        ,exposure_criteria_setting_substances_code = #{exposureCriteriaSettingSubstancesCode}
+        ,prohibited_substances = #{prohibitedSubstances}
+        ,process_safety_report_code = #{processSafetyReportCode}
+        ,special_health_hazard = #{specialHealthHazard}
+        ,work_environment_hazard = #{workEnvironmentHazard}
+        ,msds_post = #{msdsPost}
+        ,msds_education_comment = #{msdsEducationComment}
+        ,contact_comment = #{contactComment}
+        ,provider_comment = #{providerComment}
+        ,english_language_file_uuid = #{englishLanguageFileUuid}
+        ,korean_language_file_uuid = #{koreanLanguageFileUuid}
+        ,warning_sign_file_uuid = #{warningSignFileUuid}
+        ,delete_bool = #{deleteBool}
+        ,delete_user_id = #{deleteUserId}
+        ,delete_dtm = #{deleteDtm}
+        ,delete_ip = #{deleteIp}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            msds_seq = #{msdsSeq}
+        </where>
+    </update>
+
+    <delete id="deleteMsds">
+        DELETE
+        FROM msds
+        <where>
+            msds_seq = #{msdsSeq}
+        </where>
+    </delete>
+</mapper>

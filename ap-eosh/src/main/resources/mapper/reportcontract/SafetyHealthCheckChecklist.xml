@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.personaldetail.reportcontract.repository.SafetyHealthCheckChecklistRepository">
+
+    <select id="selectSafetyHealthCheckChecklistPage" resultType="SafetyHealthCheckChecklistDto">
+        SELECT safety_health_check_checklist_seq
+        ,contract_seq
+        ,checklist_code
+        ,score
+        FROM safety_health_check_checklist
+        <where>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.limitTypeEnum)">
+                AND limit_type_enum = #{searchDto.limitTypeEnum}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSafetyHealthCheckChecklist" resultType="SafetyHealthCheckChecklistDto">
+        SELECT safety_health_check_checklist_seq
+             ,contract_seq
+             ,checklist_code
+             ,score
+        FROM safety_health_check_checklist
+        WHERE
+            contract_seq = #{contractSeq}
+    </select>
+
+    <insert id="insertSafetyHealthCheckChecklist">
+        INSERT INTO safety_health_check_checklist
+        (contract_seq
+        ,checklist_code
+        ,score
+        ,insert_ip
+        ,insert_user_id)
+        VALUES
+            (#{contractSeq}
+            ,#{checklistCode}
+            ,#{score}
+            ,#{insertIp}
+            ,#{insertUserId})
+    </insert>
+
+    <update id="updateSafetyHealthCheckChecklist">
+        UPDATE safety_health_check_checklist SET
+        score = #{score}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            safety_health_check_checklist_seq = #{safetyHealthCheckChecklistSeq}
+        </where>
+    </update>
+
+    <delete id="deleteSafetyHealthCheckChecklist">
+        DELETE
+        FROM safety_health_check_checklist
+        <where>
+            contract_seq = #{contractSeq}
+        </where>
+    </delete>
+
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.audit.repository.AuditRepository">
+
+    <select id="selectUserCheck" resultType="AuditChecklistDto">
+        SELECT audit_checklist_seq
+            ,audit_seq
+            ,checklist_classification_code
+            ,inspector_name
+            ,check_dt
+            ,inspector_name
+            ,inspector_id
+            ,status_enum
+        FROM audit_checklist
+        <where>
+            audit_seq = #{auditSeq}
+            AND inspector_name = #{inspectorName}
+        </where>
+    </select>
+
+    <select id="selectAuditPage" resultType="AuditSearchDto">
+        SELECT a.audit_seq
+            ,a.standard_yyyy
+            ,a.standard_month
+            ,a.process_strategy_code
+            ,ac.inspector_name
+            ,ac.status_enum
+        FROM audit a
+        LEFT JOIN audit_checklist ac
+            ON a.audit_seq = ac.audit_seq
+            AND ac.inspector_name = #{inspectorName}
+        <where>
+            a.standard_yyyy = #{standardYyyy}
+            AND a.standard_month = #{standardMonth}
+        </where>
+    </select>
+
+    <select id="selectAuditDetail" resultType="AuditDto">
+        SELECT audit_seq
+            ,process_strategy_code
+        FROM audit
+        <where>
+            standard_yyyy = #{standardYyyy}
+            AND standard_month = #{standardMonth}
+            AND process_strategy_code = #{processStrategyCode}
+        </where>
+    </select>
+
+    <insert id="insertAuditList" useGeneratedKeys="true" keyProperty="auditChecklistSeq">
+        INSERT INTO audit_checklist(
+            audit_seq
+            ,checklist_classification_code
+            ,inspector_id
+            ,inspector_name
+            ,check_dt
+            ,opinion
+            ,status_enum
+            ,insert_user_id
+            ,insert_dtm
+            ,insert_ip
+        )
+        VALUES (
+            #{auditSeq}
+            ,#{checklistClassificationCode}
+            ,#{inspectorId}
+            ,#{inspectorName}
+            ,#{checkDt}
+            ,#{opinion}
+            ,#{statusEnum}
+            ,#{insertUserId}
+            ,#{insertDtm}
+            ,#{insertIp}
+        )
+    </insert>
+
+    <update id="updateAuditList">
+        UPDATE audit_checklist
+        SET check_dt = #{checkDt}
+            ,opinion = #{opinion}
+            ,status_enum = #{statusEnum}
+            ,update_ip = #{updateIp}
+            ,update_dtm = #{updateDtm}
+            ,update_user_id = #{updateUserId}
+        <where>
+            AND audit_checklist_seq = #{auditChecklistSeq}
+        </where>
+    </update>
+
+    <insert id="insertAuditQuestionResult">
+        INSERT INTO audit_checklist_question_result (
+            audit_checklist_seq
+            ,one_depth_question_code
+            ,two_depth_question_code
+            ,three_depth_question_code
+            ,practice_bool
+            ,remark
+            ,budget
+            ,insert_ip
+            ,insert_user_id
+            ,insert_dtm
+        )
+        VALUES (
+            #{auditChecklistSeq}
+            ,#{oneDepthQuestionCode}
+            ,#{twoDepthQuestionCode}
+            ,#{threeDepthQuestionCode}
+            ,#{practiceBool}
+            ,#{remark}
+            ,#{budget}
+            ,#{insertIp}
+            ,#{insertUserId}
+            ,#{insertDtm}
+        )
+    </insert>
+
+    <update id="updateAuditQuestionResult">
+        UPDATE audit_checklist_question_result
+        SET practice_bool = #{practiceBool}
+            ,remark = #{remark}
+            ,budget = #{budget}
+            ,update_dtm = #{updateDtm}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            AND audit_checklist_question_result_seq = #{auditChecklistQuestionResultSeq}
+        </where>
+    </update>
+
+    <select id="selectAuditResultList" resultType="AuditResultDto">
+        SELECT audit_checklist_question_result_seq
+            ,audit_checklist_seq
+            ,one_depth_question_code
+            ,two_depth_question_code
+            ,three_depth_question_code
+            ,practice_bool
+            ,remark
+            ,budget
+        FROM audit_checklist_question_result
+        <where>
+            audit_checklist_seq = #{auditChecklistSeq}
+        </where>
+    </select>
+
+</mapper>

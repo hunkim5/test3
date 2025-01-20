@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.ca.repository.SubscribeCaItemInchargeRepository">
+    <select id="selectItemInchargeList" resultType="SubscribeCaItemInchargeEntity">
+        SELECT
+        t_mast.subscribe_ca_item_incharge_seq
+        ,t_mast.subscribe_ca_uuid
+        ,t_mast.subscribe_ca_item_seq
+        ,t_mast.main_bool
+        ,t_mast.incharge_user_id
+        ,t_mast.incharge_user_name
+        ,t_mast.incharge_department_id
+        ,t_mast.incharge_department_name
+        ,t_mast.remark_content
+        ,t_mast.delete_bool
+        ,t_mast.delete_user_id
+        ,t_mast.delete_dtm
+        ,t_mast.delete_ip
+        ,t_mast.insert_user_id
+        ,t_mast.insert_dtm
+        ,t_mast.insert_ip
+        ,t_mast.update_user_id
+        ,t_mast.update_dtm
+        ,t_mast.update_ip
+        FROM
+        subscribe_ca_item_incharge t_mast
+        <where>
+            and t_mast.subscribe_ca_uuid = #{subscribeCaUuid}
+            and t_mast.subscribe_ca_item_seq = #{subscribeCaItemSeq}
+            and t_mast.delete_bool = 0
+        </where>
+        order by
+        t_mast.subscribe_ca_item_incharge_seq desc
+    </select>
+    <update id="deleteSubscribeCaInchargeListExclude">
+        UPDATE subscribe_ca_item_incharge
+        SET
+        delete_bool = 1
+        ,delete_user_id = #{subscribeCaItemInchargeEntity.deleteUserId}
+        ,delete_dtm = #{subscribeCaItemInchargeEntity.deleteDtm}
+        ,delete_ip = #{subscribeCaItemInchargeEntity.deleteIp}
+        <where>
+            and subscribe_ca_uuid = #{subscribeCaItemInchargeEntity.subscribeCaUuid}
+            and subscribe_ca_item_seq = #{subscribeCaItemInchargeEntity.subscribeCaItemSeq}
+            and delete_bool = 0
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty( excludeInchargeSeqList )">
+                AND subscribe_ca_item_incharge_seq NOT IN
+                (
+                <foreach collection="excludeInchargeSeqList" item="item" separator=" , ">
+                    #{item}
+                </foreach>
+                )
+            </if>
+        </where>
+
+    </update>
+    <insert id="insertSubscribeCaIncharge" useGeneratedKeys="true" keyProperty="subscribeCaItemInchargeSeq">
+        INSERT INTO subscribe_ca_item_incharge
+        (subscribe_ca_uuid, subscribe_ca_item_seq, main_bool, incharge_user_id,
+         incharge_user_name, incharge_department_id, incharge_department_name, remark_content, insert_user_id,
+         insert_dtm, insert_ip, update_user_id, update_dtm, update_ip)
+        VALUES (#{subscribeCaUuid}, #{subscribeCaItemSeq}, #{mainBool},
+                #{inchargeUserId}, #{inchargeUserName}, #{inchargeDepartmentId}, #{inchargeDepartmentName},
+                #{remarkContent}, #{insertUserId}, #{insertDtm}, #{insertIp}, #{updateUserId}, #{updateDtm},
+                #{updateIp})
+
+    </insert>
+    <update id="updateSubscribeCaIncharge">
+        UPDATE subscribe_ca_item_incharge
+        SET
+        main_bool = #{mainBool}
+        ,incharge_user_id = #{inchargeUserId}
+        ,incharge_user_name = #{inchargeUserName}
+        ,incharge_department_id = #{inchargeDepartmentId}
+        ,incharge_department_name = #{inchargeDepartmentName}
+        ,remark_content = #{remarkContent}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        ,update_ip = #{updateIp}
+        <where>
+            and subscribe_ca_item_incharge_seq = #{subscribeCaItemInchargeSeq}
+            and subscribe_ca_item_seq = #{subscribeCaItemSeq}
+            and subscribe_ca_item_seq = #{subscribeCaItemSeq}
+        </where>
+
+    </update>
+</mapper>

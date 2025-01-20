@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.committee.repository.MeetingContractorSafetyHealthRepository">
+    <select id="selectMeetingContractorSafetyHealth" resultType="MeetingContractorSafetyHealthDto">
+        SELECT
+        meeting_attend_user_seq
+        ,contractor_bool
+        ,safety_health_action_bool
+        ,safety_auth_target_proc_bool
+        ,clean_install_place
+        ,hazard_proc_share
+        ,hire_change_edu
+        ,regular_special_edu
+        ,manager_edu
+        ,manager_repair_edu
+        ,work_rest_adj_time
+        ,work_place_phone_build
+        ,disaster_occurrence_evacuation_method
+        ,interchange_phone_work
+        ,work_change_edu
+        ,regular_special_edu
+        ,opinion_comment
+        ,special_safety_edu
+        ,multiple_file_uuid
+        ,picture_multiple_file_uuid
+        FROM meeting_contractor_safety_health
+        <where>
+            AND meeting_attend_user_seq = #{meetingAttendUserSeq}
+        </where>
+    </select>
+    <insert id="insertMeetingContractorSafetyHealth" useGeneratedKeys="true" keyProperty="meetingAttendUserSeq">
+        INSERT INTO meeting_contractor_safety_health
+        ( meeting_attend_user_seq
+        , contractor_bool
+        , safety_health_action_bool
+        , safety_auth_target_proc_bool
+        , clean_install_place
+        , hazard_proc_share
+        , hire_change_edu
+        , regular_special_edu
+        , manager_edu
+        , manager_repair_edu
+        , work_rest_adj_time
+        , work_place_phone_build
+        , disaster_occurrence_evacuation_method
+        , interchange_phone_work
+        , work_change_edu
+        , special_safety_edu
+        , opinion_comment
+        , multiple_file_uuid
+        , picture_multiple_file_uuid
+        , insert_ip
+        , insert_user_id)
+        VALUES ( #{meetingAttendUserSeq}
+               , #{contractorBool}
+               , #{safetyHealthActionBool}
+               , #{safetyAuthTargetProcBool}
+               , #{cleanInstallPlace}
+               , #{hazardProcShare}
+               , #{hireChangeEdu}
+               , #{regularSpecialEdu}
+               , #{managerEdu}
+               , #{managerRepairEdu}
+               , #{workRestAdjTime}
+               , #{workPlacePhoneBuild}
+               , #{disasterOccurrenceEvacuationMethod}
+               , #{interchangePhoneWork}
+               , #{workChangeEdu}
+               , #{specialSafetyEdu}
+               , #{opinionComment}
+               , #{multipleFileUuid}
+               , #{pictureMultipleFileUuid}
+               , #{insertIp}
+               , #{insertUserId})
+    </insert>
+    <update id="updateMeetingContractorSafetyHealth">
+        UPDATE meeting_contractor_safety_health SET
+        contractor_bool = #{contractorBool}
+        ,safety_health_action_bool = #{safetyHealthActionBool}
+        ,safety_auth_target_proc_bool = #{safetyAuthTargetProcBool}
+        ,clean_install_place = #{cleanInstallPlace}
+        ,hazard_proc_share = #{hazardProcShare}
+        ,hire_change_edu = #{hireChangeEdu}
+        ,regular_special_edu = #{regularSpecialEdu}
+        ,manager_edu = #{managerEdu}
+        ,manager_repair_edu = #{managerRepairEdu}
+        ,work_rest_adj_time = #{workRestAdjTime}
+        ,work_place_phone_build = #{workPlacePhoneBuild}
+        ,disaster_occurrence_evacuation_method = #{disasterOccurrenceEvacuationMethod}
+        ,interchange_phone_work = #{interchangePhoneWork}
+        ,work_change_edu = #{workChangeEdu}
+        ,special_safety_edu = #{specialSafetyEdu}
+        ,opinion_comment = #{opinionComment}
+        ,multiple_file_uuid = #{multipleFileUuid}
+        ,picture_multiple_file_uuid = #{pictureMultipleFileUuid}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            meeting_attend_user_seq = #{meetingAttendUserSeq}
+        </where>
+    </update>
+
+    <delete id="deleteMeetingContractorSafetyHealth">
+        DELETE FROM meeting_contractor_safety_health
+        <where>
+            AND meeting_attend_user_seq = #{meetingAttendUserSeq}
+        </where>
+    </delete>
+</mapper>

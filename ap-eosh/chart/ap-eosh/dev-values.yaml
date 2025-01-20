@@ -1,0 +1,108 @@
+# Default values for portal-btms-web.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 999182299633.dkr.ecr.ap-northeast-2.amazonaws.com/dev-ap-eosh
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  #tag: "t0.1"
+
+imagePullSecrets: [ ]
+nameOverride: "dev-ap-eosh"
+fullnameOverride: "dev-ap-eosh"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  annotations: { }
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: { }
+
+podSecurityContext: { }
+# fsGroup: 2000
+
+securityContext:
+  { }
+  # capabilities:
+  #   drop:
+  #   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8088
+
+ingress:
+  enabled: true
+  className: "alb"
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dev-portal-alb
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/load-balancer-name: dev-portal-alb
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:999182299633:certificate/40a6aaea-4113-4cf7-914f-e6df008b9fe7
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
+    alb.ingress.kubernetes.io/tags: api-eosh.dev.flypremia.com=include
+  hosts:
+    - host: api-eosh.dev.flypremia.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: [ ]
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 500m
+    memory: 1024Mi
+  requests:
+    cpu: 500m
+    memory: 1024Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }
+
+storageclass:
+  enabled: false
+
+persistence:
+  enabled: false
+
+configmap:
+  DD_PROFILING_ENABLED: "false"
+  DD_LOGS_INJECTION: "false"
+  spring_profiles_active: dev
+
+phase: dev
+

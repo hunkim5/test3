@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.personaldetail.health.repository.UserSpecialExaminationRepository">
+
+     <select id="selectUserSpecialExaminationPage" resultType="UserSpecialExaminationDto">
+           SELECT usp.user_seq
+               ,usp.standard_yyyy
+               ,usp.examination_status_enum
+               ,usp.examination_dt
+               ,usp.special_exam_comment
+               ,usp.special_exam_dt
+               ,usp.examination_result_content
+               ,usp.external_examination_record_content
+               ,usp.multiple_file_uuid
+               ,usr.user_job_classification_classification_enum
+               ,usr.user_id
+            FROM user_special_examination usp
+            JOIN user usr ON usp.user_seq = usr.user_seq
+            <where>
+                <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.userJobClassificationClassificationEnum)">
+                    AND usr.user_job_classification_classification_enum = #{searchDto.userJobClassificationClassificationEnum}
+                </if>
+                <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.userId)">
+                    AND usr.user_id = #{searchDto.userId}
+                </if>
+            </where>
+    </select>
+    <select id="selectUserSpecialExamination" resultType="UserSpecialExaminationDto">
+           SELECT user_seq
+           ,standard_yyyy
+           ,examination_status_enum
+           ,examination_dt
+           ,special_exam_comment
+           ,special_exam_dt
+           ,examination_result_content
+           ,external_examination_record_content
+           ,multiple_file_uuid
+        FROM user_special_examination
+        WHERE
+            user_seq = #{userSeq}
+        AND standard_yyyy = #{standardYyyy}
+    </select>
+
+    <insert id="insertUserSpecialExamination">
+        INSERT INTO user_special_examination
+        (user_seq
+        ,standard_yyyy
+        ,examination_status_enum
+        ,examination_dt
+        ,special_exam_comment
+        ,special_exam_dt
+        ,examination_result_content
+        ,external_examination_record_content
+        ,multiple_file_uuid
+        ,insert_ip
+        ,insert_user_id)
+ VALUES
+        (#{userSeq}
+        ,#{standardYyyy}
+        ,#{examinationStatusEnum}
+        ,#{examinationDt}
+        ,#{specialExamComment}
+        ,#{specialExamDt}
+        ,#{examinationResultContent}
+        ,#{externalExaminationRecordContent}
+        ,#{multipleFileUuid}
+        ,#{insertIp}
+        ,#{insertUserId})
+    </insert>
+
+    <update id="updateUserSpecialExamination">
+        UPDATE user_special_examination
+        SET
+        examination_status_enum = #{examinationStatusEnum}
+        ,examination_dt = #{examinationDt}
+        ,special_exam_comment = #{specialExamComment}
+        ,special_exam_dt = #{specialExamDt}
+        ,examination_result_content = #{examinationResultContent}
+        ,external_examination_record_content = #{externalExaminationRecordContent}
+        ,multiple_file_uuid = #{multipleFileUuid}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        <where>
+            user_seq = #{userSeq}
+        AND standard_yyyy = #{standardYyyy}
+        </where>
+    </update>
+
+     <delete id="deleteUserSpecialExamination">
+            DELETE
+            FROM user_special_examination
+            WHERE user_seq=#{userSeq}
+            AND standard_yyyy = #{standardYyyy}
+     </delete>
+
+     <select id="selectUserSpecialExaminationInfo" resultType="UserSpecialExaminationDto">
+         SELECT
+             user_seq
+         FROM user_special_examination
+         WHERE user_seq = #{userSeq} and standard_yyyy = #{standardYyyy}
+     </select>
+
+</mapper>

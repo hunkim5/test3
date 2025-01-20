@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.certification.repository.CertificationSafeguardingRepository">
+    <select id="selectCertificationSafeguardingPage" resultType="CertificationSafeguardingDto">
+            SELECT safeguarding_seq
+            ,request_department
+            ,storage_department_code
+            ,job_division_code
+            ,safety_certification_bool
+            ,autonomy_safety_check_report_bool
+            ,safety_inspection_bool
+            ,etc_bool
+            ,movement_area_registration_no
+            ,new_division_code
+            ,safeguarding_code
+            ,protect_gear_code
+            ,product_manufacturer_name
+            ,product_manufacturer_phoneno
+            ,product_manufacturer_email
+            ,product_name
+            ,product_model_name
+            ,add_description
+            ,multiple_file_safetycertification_uuid
+            ,multiple_file_safetyinspection_uuid
+            ,multiple_file_autonomysafety_uuid
+            ,protection_device_quantity
+            ,protect_gear_quantity
+            ,request_department_name
+            ,request_user_id
+            ,report_no
+            ,approval_work_report_status_enum
+            ,protect_gear_detail_code
+            ,registration_dt
+            ,expiration_dt
+            ,manufacturing_dt
+            ,disposal_dt
+            ,replacement_recommend_condition
+            ,reject_reason
+            ,subject
+            ,request_user_name
+            ,insert_dtm
+        FROM work_report_safeguarding
+        <where>
+            AND approval_work_report_status_enum IN ('APPROVAL','CLOSE')
+            AND safeguarding_code IS NOT NULL
+            <if test="searchDto.safetyCertificationBool
+                          or searchDto.autonomySafetyCheckReportBool
+                          or searchDto.safetyInspectionBool
+                          or searchDto.etcBool">
+                AND (
+                <if test="searchDto.safetyCertificationBool">
+                    safety_certification_bool = true
+                </if>
+                <if test="searchDto.autonomySafetyCheckReportBool">
+                    <if test="searchDto.safetyCertificationBool">OR</if>
+                    autonomy_safety_check_report_bool = true
+                </if>
+                <if test="searchDto.safetyInspectionBool">
+                    <if test="searchDto.safetyCertificationBool
+                          or searchDto.autonomySafetyCheckReportBool">OR</if>
+                    safety_inspection_bool = true
+                </if>
+                <if test="searchDto.etcBool">
+                    <if test="searchDto.safetyCertificationBool
+                          or searchDto.autonomySafetyCheckReportBool
+                          or searchDto.safetyInspectionBool">OR</if>
+                    etc_bool = true
+                </if>
+                )
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.registrationDt)">
+                AND registration_dt = #{searchDto.registrationDt}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.expirationDt)">
+                AND expiration_dt = #{searchDto.expirationDt}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.safeguardingCode)">
+                AND safeguarding_code = #{searchDto.safeguardingCode}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.productName)">
+                AND product_name LIKE #{searchDto.productName}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.productModelName)">
+                AND product_model_name LIKE #{searchDto.productModelName}
+            </if>
+        </where>
+        ORDER BY safeguarding_seq DESC
+    </select>
+
+    <select id="selectCertificationSafeguarding" resultType="CertificationSafeguardingDto">
+        SELECT safeguarding_seq
+             ,request_department
+             ,storage_department_code
+             ,job_division_code
+             ,safety_certification_bool
+             ,autonomy_safety_check_report_bool
+             ,safety_inspection_bool
+             ,etc_bool
+             ,movement_area_registration_no
+             ,new_division_code
+             ,safeguarding_code
+             ,protect_gear_code
+             ,product_manufacturer_name
+             ,product_manufacturer_phoneno
+             ,product_manufacturer_email
+             ,product_name
+             ,product_model_name
+             ,add_description
+             ,multiple_file_safetycertification_uuid
+             ,multiple_file_safetyinspection_uuid
+             ,multiple_file_autonomysafety_uuid
+             ,protection_device_quantity
+             ,protect_gear_quantity
+             ,request_department_name
+             ,request_user_id
+             ,report_no
+             ,approval_work_report_status_enum
+             ,protect_gear_detail_code
+             ,registration_dt
+             ,expiration_dt
+             ,manufacturing_dt
+             ,disposal_dt
+             ,replacement_recommend_condition
+             ,reject_reason
+             ,subject
+             ,request_user_name
+        FROM work_report_safeguarding
+        WHERE
+            safeguarding_seq = #{safeguardingSeq}
+    </select>
+
+    <update id="updateCertificationSafeguarding">
+        UPDATE work_report_safeguarding SET
+            safety_certification_bool = #{safetyCertificationBool}
+            ,autonomy_safety_check_report_bool = #{autonomySafetyCheckReportBool}
+            ,safety_inspection_bool = #{safetyInspectionBool}
+            ,etc_bool = #{etcBool}
+            ,protection_device_quantity = #{protectionDeviceQuantity}
+            ,expiration_dt = #{expirationDt}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            safeguarding_seq = #{safeguardingSeq}
+        </where>
+    </update>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.committee.repository.MeetingRepository">
+    <select id="selectMeetingPage" resultType="MeetingDto">
+           SELECT meeting_seq
+           ,committee_enum
+           ,representative_meeting_user_name
+           ,meeting_dt
+           ,meeting_check_dt
+           ,meeting_subject
+           ,meeting_content
+           ,meeting_location_comment
+           ,attach_multiple_file_uuid
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM meeting
+        <where>
+            committee_enum = #{searchDto.committeeEnum}
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.meetingSubject)">
+                AND meeting_subject LIKE #{searchDto.meetingSubject}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.meetingDt)">
+                AND meeting_dt = #{searchDto.meetingDt}
+            </if>
+            <if test="@com.airpremia.esmsfos.core.MybatisUtils@isNotEmpty(searchDto.representativeMeetingUserName)">
+                AND representative_meeting_user_name LIKE #{searchDto.representativeMeetingUserName}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectMeeting" resultType="MeetingDto">
+           SELECT meeting_seq
+           ,committee_enum
+           ,representative_meeting_user_name
+           ,meeting_dt
+           ,meeting_check_dt
+           ,meeting_subject
+           ,meeting_content
+           ,meeting_location_comment
+           ,attach_multiple_file_uuid
+           ,delete_bool
+           ,delete_user_id
+           ,delete_dtm
+           ,delete_ip
+        FROM meeting
+        <where>
+            AND meeting_seq = #{meetingSeq}
+        </where>
+    </select>
+
+    <insert id="insertMeeting" useGeneratedKeys="true" keyProperty="meetingSeq">
+        INSERT INTO meeting
+        (committee_enum
+        ,representative_meeting_user_name
+        ,meeting_dt
+        ,meeting_check_dt
+        ,meeting_subject
+        ,meeting_content
+        ,meeting_location_comment
+        ,attach_multiple_file_uuid
+        ,delete_bool
+        ,insert_ip
+        ,insert_user_id
+        ,insert_dtm)
+ VALUES
+        (#{committeeEnum}
+        ,#{representativeMeetingUserName}
+        ,#{meetingDt}
+        ,#{meetingCheckDt}
+        ,#{meetingSubject}
+        ,#{meetingContent}
+        ,#{meetingLocationComment}
+        ,#{attachMultipleFileUuid}
+        ,false
+        ,#{insertIp}
+        ,#{insertUserId}
+        ,#{insertDtm})
+    </insert>
+
+    <update id="updateMeeting">
+        UPDATE meeting SET
+         representative_meeting_user_name = #{representativeMeetingUserName}
+        ,meeting_dt = #{meetingDt}
+        ,meeting_check_dt = #{meetingCheckDt}
+        ,meeting_subject = #{meetingSubject}
+        ,meeting_content = #{meetingContent}
+        ,meeting_location_comment = #{meetingLocationComment}
+        ,attach_multiple_file_uuid = #{attachMultipleFileUuid}
+        ,update_ip = #{updateIp}
+        ,update_user_id = #{updateUserId}
+        ,update_dtm = #{updateDtm}
+        <where>
+            meeting_seq = #{meetingSeq}
+        </where>
+    </update>
+
+</mapper>

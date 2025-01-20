@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.education.repository.InstructorRepository">
+
+    <select id="selectEducationInstructorList" resultType="InstructorDto">
+        SELECT instructor_seq
+            ,user_id
+            ,user_name
+            ,department_id
+            ,department_name
+        FROM instructor
+    </select>
+
+    <select id="selectEducationInstructorPage" resultType="InstructorDto">
+        SELECT instructor_seq
+            ,user_id
+            ,user_name
+            ,department_id
+            ,department_name
+            ,appoint_dt
+        FROM instructor
+        ORDER BY instructor_seq DESC
+    </select>
+
+    <select id="duplecateCheck" resultType="java.lang.Integer">
+            SELECT COUNT(*)
+            FROM instructor
+            <where>
+                user_id = #{userId}
+            </where>
+        </select>
+
+    <insert id="insertInstructor" useGeneratedKeys="true" keyProperty="instructorSeq">
+        INSERT INTO instructor (
+        	user_id
+        	,user_name
+        	,department_id
+        	,department_name
+        	,appoint_dt
+        	,insert_user_id
+        	,insert_dtm
+        	,insert_ip
+        ) VALUES (
+        	#{userId}
+        	,#{userName}
+        	,#{departmentId}
+        	,#{departmentName}
+        	,#{appointDt}
+        	,#{insertUserId}
+        	,#{insertDtm}
+        	,#{insertIp}
+        )
+    </insert>
+
+    <select id="selectInstructorDetail" resultType="InstructorDto">
+        SELECT instructor_seq
+            ,user_id
+            ,user_name
+            ,department_id
+            ,department_name
+            ,appoint_dt
+        FROM instructor
+        <where>
+            instructor_seq = #{instructorSeq}
+        </where>
+    </select>
+
+    <select id="selectInstructorDetailList" resultType="InstructorDto">
+            SELECT instructor_seq
+                ,user_id
+                ,user_name
+                ,department_id
+                ,department_name
+                ,appoint_dt
+            FROM instructor
+            <where>
+                AND instructor_seq IN
+                <foreach item="instructorSeq" collection="instructorSeqs" open="(" separator="," close=")">
+                    #{instructorSeq}
+                </foreach>
+            </where>
+        </select>
+
+    <delete id="deleteInstructor">
+        DELETE
+        FROM instructor
+        <where>
+            AND instructor_seq = #{instructorSeq}
+        </where>
+    </delete>
+
+    <select id="duplicateCheck" resultType="java.lang.Integer">
+        SELECT
+            count(instructor_seq)
+        FROM instructor
+        <where>
+            AND user_id = #{userId}
+        </where>
+    </select>
+
+    <select id="selectExternalUserId" resultType="java.lang.String">
+        SELECT
+        	user_id
+        FROM instructor
+        ORDER BY insert_dtm DESC
+        LIMIT 1
+    </select>
+
+</mapper>

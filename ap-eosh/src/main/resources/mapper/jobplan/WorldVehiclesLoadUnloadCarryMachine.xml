@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.airpremia.eosh.jobplan.repository.WorldVehiclesLoadUnloadCarryMachineRepository">
+
+    <select id="selectWorldVehiclesLoadUnloadCarryMachine" resultType="WorldVehiclesLoadUnloadCarryMachineDto">
+        SELECT job_seq
+            ,write_classification_code
+            ,speed_limit
+            ,machine_code
+            ,machine_etc
+            ,machine_no
+            ,model_name
+            ,machine_standard
+            ,job_ability
+            ,inspection_bool
+            ,insurance_period
+            ,product_name
+            ,cargo_shape
+            ,freight_specification
+            ,cargo_weight
+            ,carry_weight
+            ,job_order_content
+            ,danger_element
+            ,safety_job_method
+            ,remark
+            ,operation_path_attach_uuid
+            ,checklist_code
+            ,checklist_write_bool
+            ,multiple_attachfile_uuid
+        FROM world_vehicles_load_unload_carry_machine
+        <where>
+            job_seq = #{jobSeq}
+        </where>
+    </select>
+
+    <insert id="insertWorldVehiclesLoadUnloadCarryMachine">
+        INSERT INTO world_vehicles_load_unload_carry_machine (
+            job_seq
+            ,write_classification_code
+            ,speed_limit
+            ,machine_code
+            ,machine_etc
+            ,machine_no
+            ,model_name
+            ,machine_standard
+            ,job_ability
+            ,inspection_bool
+            ,insurance_period
+            ,product_name
+            ,cargo_shape
+            ,freight_specification
+            ,cargo_weight
+            ,carry_weight
+            ,job_order_content
+            ,danger_element
+            ,safety_job_method
+            ,remark
+            ,operation_path_attach_uuid
+            ,checklist_code
+            ,checklist_write_bool
+            ,multiple_attachfile_uuid
+            ,insert_ip
+            ,insert_user_id
+            )
+        VALUES (
+            #{jobSeq}
+            ,#{writeClassificationCode}
+            ,#{speedLimit}
+            ,#{machineCode}
+            ,#{machineEtc}
+            ,#{machineNo}
+            ,#{modelName}
+            ,#{machineStandard}
+            ,#{jobAbility}
+            ,#{inspectionBool}
+            ,#{insurancePeriod}
+            ,#{productName}
+            ,#{cargoShape}
+            ,#{freightSpecification}
+            ,#{cargoWeight}
+            ,#{carryWeight}
+            ,#{jobOrderContent}
+            ,#{dangerElement}
+            ,#{safetyJobMethod}
+            ,#{remark}
+            ,#{operationPathAttachUuid}
+            ,#{checklistCode}
+            ,#{checklistWriteBool}
+            ,#{multipleAttachfileUuid}
+            ,#{insertIp}
+            ,#{insertUserId}
+            )
+    </insert>
+
+    <update id="updateWorldVehiclesLoadUnloadCarryMachine">
+        UPDATE world_vehicles_load_unload_carry_machine
+        SET write_classification_code = #{writeClassificationCode}
+            ,speed_limit = #{speedLimit}
+            ,machine_code = #{machineCode}
+            ,machine_etc = #{machineEtc}
+            ,machine_no = #{machineNo}
+            ,model_name = #{modelName}
+            ,machine_standard = #{machineStandard}
+            ,job_ability = #{jobAbility}
+            ,inspection_bool = #{inspectionBool}
+            ,insurance_period = #{insurancePeriod}
+            ,product_name = #{productName}
+            ,cargo_shape = #{cargoShape}
+            ,freight_specification = #{freightSpecification}
+            ,cargo_weight = #{cargoWeight}
+            ,carry_weight = #{carryWeight}
+            ,job_order_content = #{jobOrderContent}
+            ,danger_element = #{dangerElement}
+            ,safety_job_method = #{safetyJobMethod}
+            ,remark = #{remark}
+            ,operation_path_attach_uuid = #{operationPathAttachUuid}
+            ,checklist_code = #{checklistCode}
+            ,checklist_write_bool = #{checklistWriteBool}
+            ,multiple_attachfile_uuid = #{multipleAttachfileUuid}
+            ,update_ip = #{updateIp}
+            ,update_user_id = #{updateUserId}
+        <where>
+            job_seq = #{jobSeq}
+        </where>
+    </update>
+
+    <delete id="deleteWorldVehiclesLoadUnloadCarryMachine">
+        DELETE
+        FROM world_vehicles_load_unload_carry_machine
+        <where>
+            job_seq IN (
+                <foreach collection="deleteSeqList" item="jobSeq" separator=",">
+                    #{jobSeq}
+                </foreach>
+            )
+        </where>
+    </delete>
+</mapper>
