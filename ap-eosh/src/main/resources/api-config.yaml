@@ -1,7 +1,0 @@
-ecm:
-  api:
-    report-path: /api/v1/report
-    message: /api/v1/open-api/message
-hr:
-  api:
-    hr-emp-path: /ehr/v1/emp
